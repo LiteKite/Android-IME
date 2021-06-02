@@ -14,17 +14,36 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!--suppress AndroidUnknownAttribute -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.litekite.inputmethod.latin">
+    coreApp="true"
+    package="com.litekite.ime">
 
     <application
+        android:name="com.litekite.ime.app.ImeApp"
         android:allowBackup="false"
+        android:directBootAware="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidIME"
-        tools:ignore="AllowBackup" />
+        tools:ignore="AllowBackup,UnusedAttribute">
+
+        <service
+            android:name="com.litekite.ime.sservice.ImeService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+        </service>
+
+    </application>
 
 </manifest>

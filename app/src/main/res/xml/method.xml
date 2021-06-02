@@ -14,12 +14,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:isDefault="true"
+    android:supportsSwitchingToNextInputMethod="false">
 
-    <string name="app_name">kBoard</string>
+    <subtype
+        android:icon="@drawable/ic_launcher_foreground"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="true"
+        android:label="@string/subtype_en_US"
+        android:languageTag="en-US"
+        tools:ignore="UnusedAttribute" />
 
-    <!-- Description for English (US) keyboard subtype [CHAR LIMIT=25]
-    (US) should be an abbreviation of United States to fit in the CHAR LIMIT. -->
-    <string name="subtype_en_US">English (US)</string>
-
-</resources>
+</input-method>

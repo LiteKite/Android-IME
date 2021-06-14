@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.litekite.ime.sservice
+package com.litekite.ime.service
 
 import android.inputmethodservice.InputMethodService
+import android.os.LocaleList
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.litekite.ime.app.ImeApp
+import com.litekite.ime.widget.Keyboard
+import java.util.Locale
 
 /**
  * @author Vignesh S
@@ -27,9 +30,39 @@ import com.litekite.ime.app.ImeApp
  */
 class ImeService : InputMethodService() {
 
+    companion object {
+        const val DEFAULT_LOCALE = "en"
+        const val DEF_TYPE = "xml"
+        const val LAYOUT_KEYBOARD_QWERTY = "keyboard_qwerty"
+        const val LAYOUT_KEYBOARD_SYMBOL = "keyboard_symbol"
+    }
+
+    private lateinit var qwertyKeyboard: Keyboard
+    private lateinit var symbolKeyboard: Keyboard
+
+    init {
+        ImeApp.printLog(ImeApp.TAG, "init:")
+    }
+
     override fun onCreate() {
         super.onCreate()
         ImeApp.printLog(ImeApp.TAG, "onCreate:")
+        qwertyKeyboard = createKeyboard(LAYOUT_KEYBOARD_QWERTY)
+        symbolKeyboard = createKeyboard(LAYOUT_KEYBOARD_SYMBOL)
+    }
+
+    private fun createKeyboard(layoutXml: String): Keyboard {
+        val overrideConfig = resources.configuration
+        // Set default locale
+        val localeList = LocaleList(Locale(DEFAULT_LOCALE))
+        overrideConfig.setLocales(localeList)
+        // Update configuration
+        createConfigurationContext(overrideConfig)
+        // Keyboard layout
+        return Keyboard(
+            this,
+            resources.getIdentifier(layoutXml, DEF_TYPE, packageName)
+        )
     }
 
     override fun onCreateInputView(): View {

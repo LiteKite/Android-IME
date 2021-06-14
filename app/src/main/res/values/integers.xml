@@ -14,7 +14,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_launcher_background" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
-</adaptive-icon>
+<resources>
+    <integer name="keycode_shift">-1</integer>
+    <integer name="keycode_mode_change">-2</integer>
+    <integer name="keycode_done">-4</integer>
+    <integer name="keycode_delete">-5</integer>
+    <integer name="keycode_space">32</integer>
+    <integer name="keycode_return">10</integer>
+    <integer name="keycode_close_keyboard">-99</integer>
+</resources>

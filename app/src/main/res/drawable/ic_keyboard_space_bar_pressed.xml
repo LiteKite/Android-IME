@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2021 LiteKite Startup. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!--
+This mess is all to draw a rectangle in the right place on the screen.
+Here's what's going on:
+    - Keyboard uses the intrinsic size of the drawable to work out where the drawable should be
+      centered in the key.
+    - Inset uses the intrinsic size of its inner drawable. This effectively scales the drawable
+      down to add padding, and doesn't make the drawable bigger.
+    - LayerList uses the maximum intrinsic size of its items as its intrinsic size.
+    - So, we use a LayerList with a blank shape that assumes the size of the keyboard key.
+    - We then add an inset with insetTop + insetBottom + inner shape = size of key.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <size
+                android:width="@dimen/keyboard_key_space_bar_width"
+                android:height="@dimen/keyboard_key_height" />
+            <solid android:color="@color/black" />
+        </shape>
+    </item>
+    <item>
+        <inset
+            android:insetBottom="@dimen/keyboard_space_bar_pressed_margin"
+            android:insetLeft="@dimen/keyboard_key_space_bar_visual_horizontal_padding"
+            android:insetRight="@dimen/keyboard_key_space_bar_visual_horizontal_padding"
+            android:insetTop="@dimen/keyboard_space_bar_pressed_margin">
+            <shape android:shape="rectangle">
+                <corners android:radius="@dimen/keyboard_space_bar_radius" />
+                <size
+                    android:width="@dimen/keyboard_key_space_bar_visual_width"
+                    android:height="@dimen/keyboard_space_bar_height" />
+                <solid android:color="@color/white" />
+            </shape>
+        </inset>
+    </item>
+</layer-list>

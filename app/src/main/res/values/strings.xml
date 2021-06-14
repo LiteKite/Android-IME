@@ -22,4 +22,27 @@
     (US) should be an abbreviation of United States to fit in the CHAR LIMIT. -->
     <string name="subtype_en_US">English (US)</string>
 
+    <!-- Alternative keys for a. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_a">aàáâäæãåāª</string>
+    <!-- Alternative keys for c. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_c">cçćč</string>
+    <!-- Alternative keys for e. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_e">eèéêëēėę</string>
+    <!-- Alternative keys for i. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_i">iîïíīįì</string>
+    <!-- Alternative keys for l. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_l">lł</string>
+    <!-- Alternative keys for n. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_n">nñń</string>
+    <!-- Alternative keys for o. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_o">oôöòóœøōõº</string>
+    <!-- Alternative keys for s. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_s">sßśš$</string>
+    <!-- Alternative keys for u. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_u">uûüùúū</string>
+    <!-- Alternative keys for y. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_y">yÿ</string>
+    <!-- Alternative keys for z. [DO NOT TRANSLATE] -->
+    <string name="alternates_for_z">zžźż</string>
+
 </resources>

@@ -14,172 +14,172 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyHeight="@dimen/keyboard_key_size"
-    android:keyWidth="@dimen/keyboard_key_size">
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyHeight="@dimen/keyboard_key_size"
+    app:keyWidth="@dimen/keyboard_key_size">
 
-    <Row android:rowEdgeFlags="top">
+    <Row app:rowEdgeFlags="top">
         <Key
-            android:keyEdgeFlags="left"
-            android:keyLabel="q" />
+            app:keyEdgeFlags="left"
+            app:keyLabel="q" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="w" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="w" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="e"
-            android:popupCharacters="@string/alternates_for_e"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="e"
+            app:popupCharacters="@string/alternates_for_e"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="r" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="r" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="t" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="t" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="y"
-            android:popupCharacters="@string/alternates_for_y"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="y"
+            app:popupCharacters="@string/alternates_for_y"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="u"
-            android:popupCharacters="@string/alternates_for_u"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="u"
+            app:popupCharacters="@string/alternates_for_u"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="i"
-            android:popupCharacters="@string/alternates_for_i"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="i"
+            app:popupCharacters="@string/alternates_for_i"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="o"
-            android:popupCharacters="@string/alternates_for_o"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="o"
+            app:popupCharacters="@string/alternates_for_o"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="p" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="p" />
         <Key
-            android:codes="@integer/keycode_delete"
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:isRepeatable="true"
-            android:keyEdgeFlags="right"
-            android:keyIcon="@drawable/ic_keyboard_backspace" />
+            app:codes="@integer/keycode_delete"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:isRepeatable="true"
+            app:keyEdgeFlags="right"
+            app:keyIcon="@drawable/ic_keyboard_backspace" />
     </Row>
 
     <Row>
         <Key
-            android:horizontalGap="@dimen/keyboard_half_key_size"
-            android:keyLabel="a"
-            android:popupCharacters="@string/alternates_for_a"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
+            app:keyLabel="a"
+            app:popupCharacters="@string/alternates_for_a"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="s"
-            android:popupCharacters="@string/alternates_for_s"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="s"
+            app:popupCharacters="@string/alternates_for_s"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="d" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="d" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="f" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="f" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="g" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="g" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="h" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="h" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="j" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="j" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="k" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="k" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="l"
-            android:popupCharacters="@string/alternates_for_l"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="l"
+            app:popupCharacters="@string/alternates_for_l"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:codes="@integer/keycode_return"
-            android:keyEdgeFlags="right"
-            android:keyIcon="@drawable/ic_keyboard_return" />
+            app:codes="@integer/keycode_return"
+            app:keyEdgeFlags="right"
+            app:keyIcon="@drawable/ic_keyboard_return" />
     </Row>
 
     <Row>
         <Key
-            android:keyEdgeFlags="left"
-            android:keyLabel="\@" />
+            app:keyEdgeFlags="left"
+            app:keyLabel="\@" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="z"
-            android:popupCharacters="@string/alternates_for_z"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="z"
+            app:popupCharacters="@string/alternates_for_z"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="x" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="x" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="c"
-            android:popupCharacters="@string/alternates_for_c"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="c"
+            app:popupCharacters="@string/alternates_for_c"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="v" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="v" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="b" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="b" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="n"
-            android:popupCharacters="@string/alternates_for_n"
-            android:popupKeyboard="@xml/keyboard_popup" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="n"
+            app:popupCharacters="@string/alternates_for_n"
+            app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="m" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="m" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="!" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="!" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="\?" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="\?" />
         <Key
-            android:codes="@integer/keycode_shift"
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:isModifier="true"
-            android:isSticky="true"
-            android:keyEdgeFlags="right"
-            android:keyIcon="@drawable/ic_keyboard_shift" />
+            app:codes="@integer/keycode_shift"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:isModifier="true"
+            app:isSticky="true"
+            app:keyEdgeFlags="right"
+            app:keyIcon="@drawable/ic_keyboard_shift" />
     </Row>
 
-    <Row android:rowEdgeFlags="bottom">
+    <Row app:rowEdgeFlags="bottom">
         <Key
-            android:codes="@integer/keycode_close_keyboard"
-            android:keyEdgeFlags="left"
-            android:keyIcon="@drawable/ic_keyboard_close" />
+            app:codes="@integer/keycode_close_keyboard"
+            app:keyEdgeFlags="left"
+            app:keyIcon="@drawable/ic_keyboard_close" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="_" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="_" />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="-" />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="-" />
         <Key
-            android:codes="@integer/keycode_space"
-            android:horizontalGap="@dimen/keyboard_half_key_size"
-            android:keyIcon="@drawable/ic_keyboard_space_bar"
-            android:keyWidth="@dimen/keyboard_key_space_bar_width" />
+            app:codes="@integer/keycode_space"
+            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
+            app:keyIcon="@drawable/ic_keyboard_space_bar"
+            app:keyWidth="@dimen/keyboard_key_space_bar_width" />
         <Key
-            android:horizontalGap="@dimen/keyboard_half_key_size"
-            android:keyLabel="," />
+            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
+            app:keyLabel="," />
         <Key
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyLabel="." />
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyLabel="." />
         <Key
-            android:codes="@integer/keycode_mode_change"
-            android:horizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            android:keyEdgeFlags="right"
-            android:keyIcon="@drawable/ic_keyboard_symbol" />
+            app:codes="@integer/keycode_mode_change"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyEdgeFlags="right"
+            app:keyIcon="@drawable/ic_keyboard_symbol" />
     </Row>
 
 </Keyboard>

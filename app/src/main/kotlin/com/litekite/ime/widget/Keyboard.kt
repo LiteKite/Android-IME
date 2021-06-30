@@ -25,6 +25,7 @@ import com.litekite.ime.R
 import com.litekite.ime.util.DimensUtil.getDimensionOrFraction
 import com.litekite.ime.util.StringUtil.parseCSV
 import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
 
 /**
  * Loads an XML description of a keyboard and stores the attributes of the keys.
@@ -69,6 +70,13 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val ROW_EDGE_RIGHT = 0x02
         const val ROW_EDGE_TOP = 0x04
         const val ROW_EDGE_BOTTOM = 0x08
+
+        const val KEYCODE_SHIFT = -1
+        const val KEYCODE_MODE_CHANGE = -2
+        const val KEYCODE_CANCEL = -3
+        const val KEYCODE_DONE = -4
+        const val KEYCODE_DELETE = -5
+        const val KEYCODE_ALT = -6
     }
 
     /** Width of the screen available to fit the Keyboard */
@@ -76,6 +84,17 @@ class Keyboard(context: Context, layoutRes: Int) {
 
     /** Height of the screen */
     private val displayHeight: Int = context.resources.displayMetrics.heightPixels
+
+    /**
+     * Total width of the Keyboard, including left side gaps and keys, but not any gaps on the
+     * right side.
+     */
+    private var keyboardWidth: Int = 0
+
+    /**
+     * Total height of the Keyboard, including the padding and keys
+     */
+    private var keyboardHeight: Int = 0
 
     /** key default width */
     private var defaultKeyWidth: Int = displayWidth / 10
@@ -95,13 +114,42 @@ class Keyboard(context: Context, layoutRes: Int) {
     /** List of keys in this Keyboard */
     private val keys: ArrayList<Key> = ArrayList()
 
+    /**
+     * Is the mKeyboardd in the shifted state
+     */
+    private var isShifted = false
+
+    /**
+     * Key instance for the shift key, if present
+     */
+    private val shiftKeys = arrayOf<Keyboard.Key?>(null, null)
+
+    /**
+     * Key index for the shift key, if present
+     */
+    private val shiftKeyIndices = intArrayOf(-1, -1)
+
+    /** List of modifier keys such as Shift & Alt, if any */
+    private val modifierKeys: ArrayList<Key> = ArrayList()
+
+    /**
+     * Keyboard mode, or zero, if none.
+     */
+    private val keyboardMode: Int = 0
+
     init {
         // Parses Keyboard attributes
         loadKeyboard(context, context.resources.getXml(layoutRes))
     }
 
+    @Throws(XmlPullParserException::class)
     private fun loadKeyboard(context: Context, parser: XmlResourceParser) {
+        var x = 0
+        var y = 0
+        var inKey = false
+        var inRow = false
         var currentRow: Row? = null
+        var currentKey: Key? = null
         parser.require(XmlPullParser.START_DOCUMENT, null, TAG_KEYBOARD)
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.eventType == XmlPullParser.START_TAG) {
@@ -110,16 +158,78 @@ class Keyboard(context: Context, layoutRes: Int) {
                         parseKeyboardAttributes(context.resources, parser)
                     }
                     TAG_ROW -> {
+                        x = 0
+                        inRow = true
                         currentRow = Row(context.resources, parser)
                         rows.add(currentRow)
+                        val skipRow = currentRow.keyboardMode != 0
+                                && currentRow.keyboardMode != keyboardMode
+                        if (skipRow) {
+                            skipToEndOfRow(parser)
+                            inRow = false
+                        }
                     }
                     TAG_KEY -> {
-                        keys.add(Key(context.resources, parser, currentRow!!))
+                        inKey = true
+                        if (currentRow != null) {
+                            currentKey = Key(context.resources, parser, currentRow)
+                            keys.add(currentKey)
+                            if (currentKey.keyCodes.isNotEmpty()
+                                && currentKey.keyCodes[0] == KEYCODE_SHIFT
+                            ) {
+                                // Find available shift key slot and put this shift key in it
+                                for (i in shiftKeys.indices) {
+                                    if (shiftKeys[i] == null) {
+                                        shiftKeys[i] = currentKey
+                                        shiftKeyIndices[i] = keys.size - 1
+                                        break
+                                    }
+                                }
+                                modifierKeys.add(currentKey)
+                            } else if (currentKey.keyCodes.isNotEmpty()
+                                && currentKey.keyCodes[0] == KEYCODE_ALT
+                            ) {
+                                modifierKeys.add(currentKey)
+                            }
+                            currentRow.keys.add(currentKey)
+                        }
+                    }
+                }
+            } else if (parser.eventType == XmlPullParser.END_TAG) {
+                if (inKey) {
+                    inKey = false
+                    if (currentKey != null) {
+                        x += currentKey.keyHorizontalGap + currentKey.keyWidth
+                        if (x > keyboardWidth) {
+                            keyboardWidth = x
+                        }
+                    }
+                } else if (inRow) {
+                    inRow = false
+                    if (currentRow != null) {
+                        y += currentRow.keyVerticalGap
+                        y += currentRow.keyHeight
                     }
                 }
             }
         }
+        keyboardHeight = y - defaultKeyVerticalGap
     }
+
+    fun setShifted(shiftState: Boolean): Boolean {
+        for (shiftKey in shiftKeys) {
+            if (shiftKey != null) {
+                shiftKey.isOn = shiftState
+            }
+        }
+        if (isShifted != shiftState) {
+            isShifted = shiftState
+            return true
+        }
+        return false
+    }
+
+    fun getShiftKeyIndex(): Int = shiftKeyIndices[0]
 
     private fun parseKeyboardAttributes(res: Resources, parser: XmlResourceParser) {
         parser.require(XmlPullParser.START_DOCUMENT, null, TAG_KEYBOARD)
@@ -165,13 +275,13 @@ class Keyboard(context: Context, layoutRes: Int) {
         private val keyWidth: Int
 
         /** Height of a key in this row. */
-        private val keyHeight: Int
+        internal val keyHeight: Int
 
         /** Key horizontal gap between keys in this row. */
         private val keyHorizontalGap: Int
 
         /** Key vertical gap following this row. */
-        private val keyVerticalGap: Int
+        internal val keyVerticalGap: Int
 
         /**
          * Edge flags for this row of keys.
@@ -181,9 +291,9 @@ class Keyboard(context: Context, layoutRes: Int) {
         internal val rowEdgeFlags: Int
 
         /** The Keyboard mode for this row  */
-        private val keyboardMode: Int
+        internal val keyboardMode: Int
 
-        private val keys: ArrayList<Key> = ArrayList()
+        internal val keys: ArrayList<Key> = ArrayList()
 
         init {
             parser.require(XmlPullParser.START_DOCUMENT, null, TAG_ROW)
@@ -225,6 +335,14 @@ class Keyboard(context: Context, layoutRes: Int) {
         }
     }
 
+    private fun skipToEndOfRow(parser: XmlResourceParser) {
+        while (parser.next() != XmlResourceParser.END_DOCUMENT) {
+            if (parser.eventType == XmlResourceParser.END_TAG && parser.name == TAG_ROW) {
+                break
+            }
+        }
+    }
+
     /**
      * Class for describing the position and characteristics of a single key in the Keyboard.
      *
@@ -246,19 +364,19 @@ class Keyboard(context: Context, layoutRes: Int) {
     inner class Key(res: Resources, parser: XmlResourceParser, parentRow: Row) {
 
         /** Width of the key, not including the gap */
-        private val keyWidth: Int
+        internal val keyWidth: Int
 
         /** Height of the key, not including the gap */
         private val keyHeight: Int
 
         /** Key horizontal gap before this key. */
-        private val keyHorizontalGap: Int
+        internal val keyHorizontalGap: Int
 
         /**
          * All the key codes (unicode or custom code) that this key could generate,
          * zeroth being the most important.
          */
-        private var keyCodes: IntArray? = null
+        internal var keyCodes = intArrayOf()
 
         /**
          * If this key pops up a mini Keyboard,
@@ -283,6 +401,9 @@ class Keyboard(context: Context, layoutRes: Int) {
 
         /** Whether this key is sticky, i.e., a toggle key  */
         private val sticky: Boolean
+
+        /** If this is a sticky key, is it on?  */
+        internal var isOn = false
 
         /** Whether this key repeats itself when held down  */
         private val repeatable: Boolean
@@ -362,7 +483,7 @@ class Keyboard(context: Context, layoutRes: Int) {
             keyIcon?.apply {
                 setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             }
-            if (keyCodes == null && keyLabel.isNotEmpty()) {
+            if (keyCodes.isEmpty() && keyLabel.isNotEmpty()) {
                 keyCodes = intArrayOf(keyLabel[0].code)
             }
             ta.recycle()

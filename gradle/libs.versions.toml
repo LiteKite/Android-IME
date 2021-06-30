@@ -5,7 +5,7 @@ android-gradle-plugin = "4.2.1"
 spotless-plugin-gradle = "5.12.5"
 
 # Kotlin
-kotlin = "1.5.10"
+kotlin = "1.5.20"
 ktlint = "0.41.0"
 
 # AndroidX

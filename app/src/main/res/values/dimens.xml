@@ -34,4 +34,7 @@
     <dimen name="keyboard_space_bar_pressed_margin">50dp</dimen>
     <dimen name="keyboard_key_space_bar_visual_horizontal_padding">4dp</dimen>
 
+    <dimen name="keyboard_view_popup_offset">24dp</dimen>
+    <dimen name="keyboard_view_key_text_size">26dp</dimen>
+
 </resources>

@@ -162,8 +162,8 @@ class Keyboard(context: Context, layoutRes: Int) {
                         inRow = true
                         currentRow = Row(context.resources, parser)
                         rows.add(currentRow)
-                        val skipRow = currentRow.keyboardMode != 0
-                                && currentRow.keyboardMode != keyboardMode
+                        val skipRow = currentRow.keyboardMode != 0 &&
+                            currentRow.keyboardMode != keyboardMode
                         if (skipRow) {
                             skipToEndOfRow(parser)
                             inRow = false
@@ -174,8 +174,8 @@ class Keyboard(context: Context, layoutRes: Int) {
                         if (currentRow != null) {
                             currentKey = Key(context.resources, parser, currentRow)
                             keys.add(currentKey)
-                            if (currentKey.keyCodes.isNotEmpty()
-                                && currentKey.keyCodes[0] == KEYCODE_SHIFT
+                            if (currentKey.keyCodes.isNotEmpty() &&
+                                currentKey.keyCodes[0] == KEYCODE_SHIFT
                             ) {
                                 // Find available shift key slot and put this shift key in it
                                 for (i in shiftKeys.indices) {
@@ -186,8 +186,8 @@ class Keyboard(context: Context, layoutRes: Int) {
                                     }
                                 }
                                 modifierKeys.add(currentKey)
-                            } else if (currentKey.keyCodes.isNotEmpty()
-                                && currentKey.keyCodes[0] == KEYCODE_ALT
+                            } else if (currentKey.keyCodes.isNotEmpty() &&
+                                currentKey.keyCodes[0] == KEYCODE_ALT
                             ) {
                                 modifierKeys.add(currentKey)
                             }

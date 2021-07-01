@@ -16,6 +16,21 @@
 -->
 <resources>
 
+    <declare-styleable name="KeyboardView">
+        <attr name="keyBackground" format="reference"/>
+        <attr name="keyTextSize" format="dimension"/>
+        <attr name="keyTextColorPrimary" format="color"/>
+        <attr name="keyTextColorSecondary" format="color"/>
+        <attr name="labelTextSize" format="dimension"/>
+        <attr name="fontFamily" format="string" />
+        <attr name="textStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+            <enum name="bold_italic" value="3" />
+        </attr>
+    </declare-styleable>
+
     <declare-styleable name="Keyboard">
         <!-- Default width of a key, in pixels or percentage of display width. -->
         <attr name="keyWidth" format="dimension|fraction" />

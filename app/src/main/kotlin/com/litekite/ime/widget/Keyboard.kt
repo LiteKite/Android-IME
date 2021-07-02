@@ -26,6 +26,7 @@ import com.litekite.ime.util.DimensUtil.getDimensionOrFraction
 import com.litekite.ime.util.StringUtil.parseCSV
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
+import java.util.Locale
 
 /**
  * Loads an XML description of a keyboard and stores the attributes of the keys.
@@ -60,8 +61,14 @@ import org.xmlpull.v1.XmlPullParserException
 class Keyboard(context: Context, layoutRes: Int) {
 
     companion object {
+
+        /** Keyboard types */
+        const val DEF_TYPE = "xml"
+        const val LAYOUT_KEYBOARD_QWERTY = "keyboard_qwerty"
+        const val LAYOUT_KEYBOARD_SYMBOL = "keyboard_symbol"
+
         /** Xml layout tags */
-        const val TAG_KEYBOARD = "keyboard"
+        const val TAG_KEYBOARD = "Keyboard"
         const val TAG_ROW = "Row"
         const val TAG_KEY = "Key"
 
@@ -71,12 +78,40 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val ROW_EDGE_TOP = 0x04
         const val ROW_EDGE_BOTTOM = 0x08
 
+        /** Modifier keys */
         const val KEYCODE_SHIFT = -1
         const val KEYCODE_MODE_CHANGE = -2
         const val KEYCODE_CANCEL = -3
         const val KEYCODE_DONE = -4
         const val KEYCODE_DELETE = -5
         const val KEYCODE_ALT = -6
+
+        /** Keyboard key drawable states */
+        private val KEY_STATE_NORMAL = intArrayOf()
+
+        private val KEY_STATE_PRESSED = intArrayOf(
+            android.R.attr.state_pressed
+        )
+
+        private val KEY_STATE_NORMAL_ON = intArrayOf(
+            android.R.attr.state_checkable,
+            android.R.attr.state_checked
+        )
+
+        private val KEY_STATE_NORMAL_OFF = intArrayOf(
+            android.R.attr.state_checkable
+        )
+
+        private val KEY_STATE_PRESSED_ON = intArrayOf(
+            android.R.attr.state_pressed,
+            android.R.attr.state_checkable,
+            android.R.attr.state_checked
+        )
+
+        private val KEY_STATE_PRESSED_OFF = intArrayOf(
+            android.R.attr.state_pressed,
+            android.R.attr.state_checkable
+        )
     }
 
     /** Width of the screen available to fit the Keyboard */
@@ -89,12 +124,12 @@ class Keyboard(context: Context, layoutRes: Int) {
      * Total width of the Keyboard, including left side gaps and keys, but not any gaps on the
      * right side.
      */
-    private var keyboardWidth: Int = 0
+    internal var keyboardWidth: Int = 0
 
     /**
      * Total height of the Keyboard, including the padding and keys
      */
-    private var keyboardHeight: Int = 0
+    internal var keyboardHeight: Int = 0
 
     /** key default width */
     private var defaultKeyWidth: Int = displayWidth / 10
@@ -112,7 +147,7 @@ class Keyboard(context: Context, layoutRes: Int) {
     private val rows: ArrayList<Row> = ArrayList()
 
     /** List of keys in this Keyboard */
-    private val keys: ArrayList<Key> = ArrayList()
+    internal val keys: ArrayList<Key> = ArrayList()
 
     /**
      * Is the mKeyboardd in the shifted state
@@ -150,7 +185,6 @@ class Keyboard(context: Context, layoutRes: Int) {
         var inRow = false
         var currentRow: Row? = null
         var currentKey: Key? = null
-        parser.require(XmlPullParser.START_DOCUMENT, null, TAG_KEYBOARD)
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.eventType == XmlPullParser.START_TAG) {
                 when (parser.name) {
@@ -172,10 +206,10 @@ class Keyboard(context: Context, layoutRes: Int) {
                     TAG_KEY -> {
                         inKey = true
                         if (currentRow != null) {
-                            currentKey = Key(context.resources, parser, currentRow)
+                            currentKey = Key(context.resources, x, y, parser, currentRow)
                             keys.add(currentKey)
-                            if (currentKey.keyCodes.isNotEmpty() &&
-                                currentKey.keyCodes[0] == KEYCODE_SHIFT
+                            if (currentKey.codes.isNotEmpty() &&
+                                currentKey.codes[0] == KEYCODE_SHIFT
                             ) {
                                 // Find available shift key slot and put this shift key in it
                                 for (i in shiftKeys.indices) {
@@ -186,8 +220,8 @@ class Keyboard(context: Context, layoutRes: Int) {
                                     }
                                 }
                                 modifierKeys.add(currentKey)
-                            } else if (currentKey.keyCodes.isNotEmpty() &&
-                                currentKey.keyCodes[0] == KEYCODE_ALT
+                            } else if (currentKey.codes.isNotEmpty() &&
+                                currentKey.codes[0] == KEYCODE_ALT
                             ) {
                                 modifierKeys.add(currentKey)
                             }
@@ -199,7 +233,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 if (inKey) {
                     inKey = false
                     if (currentKey != null) {
-                        x += currentKey.keyHorizontalGap + currentKey.keyWidth
+                        x += currentKey.width + currentKey.horizontalGap
                         if (x > keyboardWidth) {
                             keyboardWidth = x
                         }
@@ -207,8 +241,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 } else if (inRow) {
                     inRow = false
                     if (currentRow != null) {
-                        y += currentRow.keyVerticalGap
-                        y += currentRow.keyHeight
+                        y += currentRow.keyHeight + currentRow.keyVerticalGap
                     }
                 }
             }
@@ -232,7 +265,7 @@ class Keyboard(context: Context, layoutRes: Int) {
     fun getShiftKeyIndex(): Int = shiftKeyIndices[0]
 
     private fun parseKeyboardAttributes(res: Resources, parser: XmlResourceParser) {
-        parser.require(XmlPullParser.START_DOCUMENT, null, TAG_KEYBOARD)
+        parser.require(XmlPullParser.START_TAG, null, TAG_KEYBOARD)
         val ta = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard)
         defaultKeyWidth = ta.getDimensionOrFraction(
             R.styleable.Keyboard_keyWidth,
@@ -296,7 +329,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         internal val keys: ArrayList<Key> = ArrayList()
 
         init {
-            parser.require(XmlPullParser.START_DOCUMENT, null, TAG_ROW)
+            parser.require(XmlPullParser.START_TAG, null, TAG_ROW)
             var ta = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard)
             keyWidth = ta.getDimensionOrFraction(
                 R.styleable.Keyboard_keyWidth,
@@ -361,22 +394,28 @@ class Keyboard(context: Context, layoutRes: Int) {
      * @attr ref android.R.styleable#Keyboard_Key_keyOutputText
      * @attr ref android.R.styleable#Keyboard_Key_keyEdgeFlags
      */
-    inner class Key(res: Resources, parser: XmlResourceParser, parentRow: Row) {
+    inner class Key(
+        res: Resources,
+        var x: Int,
+        val y: Int,
+        parser: XmlResourceParser,
+        parentRow: Row
+    ) {
 
         /** Width of the key, not including the gap */
-        internal val keyWidth: Int
+        internal val width: Int
 
         /** Height of the key, not including the gap */
-        private val keyHeight: Int
+        internal val height: Int
 
         /** Key horizontal gap before this key. */
-        internal val keyHorizontalGap: Int
+        internal val horizontalGap: Int
 
         /**
          * All the key codes (unicode or custom code) that this key could generate,
          * zeroth being the most important.
          */
-        internal var keyCodes = intArrayOf()
+        internal var codes = intArrayOf()
 
         /**
          * If this key pops up a mini Keyboard,
@@ -385,7 +424,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         private val popupKeyboardResId: Int
 
         /** Popup characters  */
-        private val popupKeyboardChars: CharSequence
+        private var popupKeyboardChars: CharSequence = ""
 
         /**
          * Flags that specify the anchoring to edges of the Keyboard for detecting touch events
@@ -394,7 +433,7 @@ class Keyboard(context: Context, layoutRes: Int) {
          * Possible values that can be assigned are {@link Keyboard#ROW_EDGE_TOP ROW_EDGE_LEFT}
          * and {@link Keyboard#ROW_EDGE_BOTTOM ROW_EDGE_BOTTOM}
          */
-        private val keyEdgeFlags: Int
+        private val edgeFlags: Int
 
         /** Whether this is a modifier key, such as Shift or Alt  */
         private val modifier: Boolean
@@ -412,32 +451,38 @@ class Keyboard(context: Context, layoutRes: Int) {
         private val iconPreview: Drawable?
 
         /** Text to output when pressed. This can be multiple characters, like ".com"  */
-        private val keyOutputText: CharSequence
+        private var outputText: CharSequence = ""
 
         /** Label to display  */
-        private val keyLabel: CharSequence
+        private var label: CharSequence = ""
 
         /** Icon to display instead of a label. Icon takes precedence over a label  */
-        private val keyIcon: Drawable?
+        internal val icon: Drawable?
+
+        /**
+         * The current pressed state of this key
+         */
+        private var pressed = false
 
         init {
-            parser.require(XmlPullParser.START_DOCUMENT, null, TAG_KEY)
+            parser.require(XmlPullParser.START_TAG, null, TAG_KEY)
             var ta = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard)
-            keyWidth = ta.getDimensionOrFraction(
+            width = ta.getDimensionOrFraction(
                 R.styleable.Keyboard_keyWidth,
                 displayWidth,
                 defaultKeyWidth
             )
-            keyHeight = ta.getDimensionOrFraction(
+            height = ta.getDimensionOrFraction(
                 R.styleable.Keyboard_keyHeight,
                 displayHeight,
                 defaultKeyHeight
             )
-            keyHorizontalGap = ta.getDimensionOrFraction(
+            horizontalGap = ta.getDimensionOrFraction(
                 R.styleable.Keyboard_keyHorizontalGap,
                 displayWidth,
                 defaultKeyHorizontalGap
             )
+            x += horizontalGap
             ta.recycle()
             ta = res.obtainAttributes(
                 Xml.asAttributeSet(parser),
@@ -451,16 +496,16 @@ class Keyboard(context: Context, layoutRes: Int) {
             if (keyCodesTypedVal.type == TypedValue.TYPE_INT_DEC ||
                 keyCodesTypedVal.type == TypedValue.TYPE_INT_HEX
             ) {
-                keyCodes = intArrayOf(keyCodesTypedVal.data)
+                codes = intArrayOf(keyCodesTypedVal.data)
             } else if (keyCodesTypedVal.type == TypedValue.TYPE_STRING) {
-                keyCodes = keyCodesTypedVal.string.toString().parseCSV()
+                codes = keyCodesTypedVal.string.toString().parseCSV()
             }
             popupKeyboardResId = ta.getResourceId(
                 R.styleable.Keyboard_Key_popupKeyboard,
                 0
             )
-            popupKeyboardChars = ta.getText(R.styleable.Keyboard_Key_popupCharacters)
-            keyEdgeFlags = ta.getInt(
+            popupKeyboardChars = ta.getText(R.styleable.Keyboard_Key_popupCharacters) ?: ""
+            edgeFlags = ta.getInt(
                 R.styleable.Keyboard_Key_keyEdgeFlags,
                 0
             ) or parentRow.rowEdgeFlags
@@ -477,16 +522,53 @@ class Keyboard(context: Context, layoutRes: Int) {
             iconPreview?.apply {
                 setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             }
-            keyOutputText = ta.getText(R.styleable.Keyboard_Key_keyOutputText)
-            keyLabel = ta.getText(R.styleable.Keyboard_Key_keyLabel)
-            keyIcon = ta.getDrawable(R.styleable.Keyboard_Key_keyIcon)
-            keyIcon?.apply {
+            outputText = ta.getText(R.styleable.Keyboard_Key_keyOutputText) ?: ""
+            label = ta.getText(R.styleable.Keyboard_Key_keyLabel) ?: ""
+            icon = ta.getDrawable(R.styleable.Keyboard_Key_keyIcon)
+            icon?.apply {
                 setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             }
-            if (keyCodes.isEmpty() && keyLabel.isNotEmpty()) {
-                keyCodes = intArrayOf(keyLabel[0].code)
+            if (codes.isEmpty() && label.isNotEmpty()) {
+                codes = intArrayOf(label[0].code)
             }
             ta.recycle()
+        }
+
+        fun adjustCase(locale: Locale): CharSequence {
+            if (isShifted && label.length < 3 && Character.isLowerCase(label[0])) {
+                label = label.toString().uppercase(locale)
+            }
+            return label
+        }
+
+        /**
+         * Returns the drawable state for the key, based on the current state and type of the key.
+         *
+         * @return the drawable state of the key.
+         * @see android.graphics.drawable.StateListDrawable.setState
+         */
+        fun getDrawableState(): IntArray {
+            var states: IntArray = KEY_STATE_NORMAL
+            if (isOn) {
+                states = if (pressed) {
+                    KEY_STATE_PRESSED_ON
+                } else {
+                    KEY_STATE_NORMAL_ON
+                }
+            } else {
+                if (sticky) {
+                    states = if (pressed) {
+                        KEY_STATE_PRESSED_OFF
+                    } else {
+                        KEY_STATE_NORMAL_OFF
+                    }
+                } else {
+                    if (pressed) {
+                        states = KEY_STATE_PRESSED
+                    }
+                }
+            }
+            return states
         }
     }
 }

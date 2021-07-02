@@ -19,7 +19,7 @@
     <!-- Keyboard Style [IME] -->
     <style name="KeyboardStyle">
         <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
+        <item name="textStyle">normal</item>
         <item name="keyTextSize">@dimen/keyboard_view_key_text_size</item>
         <item name="labelTextSize">@dimen/keyboard_view_key_text_size</item>
         <item name="keyTextColorPrimary">?android:attr/textColorPrimary</item>

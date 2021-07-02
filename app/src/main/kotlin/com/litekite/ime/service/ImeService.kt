@@ -17,9 +17,11 @@ package com.litekite.ime.service
 
 import android.inputmethodservice.InputMethodService
 import android.os.LocaleList
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.litekite.ime.app.ImeApp
+import com.litekite.ime.databinding.LayoutKeyboardViewBinding
 import com.litekite.ime.widget.Keyboard
 import java.util.Locale
 
@@ -32,13 +34,12 @@ class ImeService : InputMethodService() {
 
     companion object {
         const val DEFAULT_LOCALE = "en"
-        const val DEF_TYPE = "xml"
-        const val LAYOUT_KEYBOARD_QWERTY = "keyboard_qwerty"
-        const val LAYOUT_KEYBOARD_SYMBOL = "keyboard_symbol"
     }
 
     private lateinit var qwertyKeyboard: Keyboard
     private lateinit var symbolKeyboard: Keyboard
+
+    private var binding: LayoutKeyboardViewBinding? = null
 
     init {
         ImeApp.printLog(ImeApp.TAG, "init:")
@@ -47,8 +48,8 @@ class ImeService : InputMethodService() {
     override fun onCreate() {
         super.onCreate()
         ImeApp.printLog(ImeApp.TAG, "onCreate:")
-        qwertyKeyboard = createKeyboard(LAYOUT_KEYBOARD_QWERTY)
-        symbolKeyboard = createKeyboard(LAYOUT_KEYBOARD_SYMBOL)
+        qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
+        symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
     }
 
     private fun createKeyboard(layoutXml: String): Keyboard {
@@ -61,23 +62,26 @@ class ImeService : InputMethodService() {
         // Keyboard layout
         return Keyboard(
             this,
-            resources.getIdentifier(layoutXml, DEF_TYPE, packageName)
+            resources.getIdentifier(layoutXml, Keyboard.DEF_TYPE, packageName)
         )
     }
 
     override fun onCreateInputView(): View {
         ImeApp.printLog(ImeApp.TAG, "onCreateInputView:")
-        return super.onCreateInputView()
+        binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(this))
+        return binding!!.root
     }
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
         ImeApp.printLog(ImeApp.TAG, "onStartInputView:")
+        binding?.vKeyboard?.setKeyboard(qwertyKeyboard)
     }
 
     override fun onEvaluateFullscreenMode(): Boolean = false
 
     override fun onDestroy() {
+        binding = null
         super.onDestroy()
         ImeApp.printLog(ImeApp.TAG, "onDestroy:")
     }

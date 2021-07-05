@@ -17,6 +17,7 @@ package com.litekite.ime.util
 
 import com.litekite.ime.app.ImeApp
 import java.util.StringTokenizer
+import java.util.regex.Pattern
 
 /**
  * @author Vignesh S
@@ -26,6 +27,8 @@ import java.util.StringTokenizer
 object StringUtil {
 
     private val TAG = StringUtil::class.java.simpleName
+
+    private val PUNCTUATION_PATTERN = Pattern.compile("[_\\-,.]")
 
     fun String.parseCSV(): IntArray {
         val size = this.filter { char -> char == ',' }.count()
@@ -42,4 +45,6 @@ object StringUtil {
         }
         return keyCodes
     }
+
+    fun String.isPunctuation(): Boolean = PUNCTUATION_PATTERN.matcher(this).matches()
 }

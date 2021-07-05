@@ -16,10 +16,15 @@
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
-        <shape android:shape="oval">
-            <corners android:radius="2dp" />
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/keyboard_half_key_size" />
             <solid android:color="@color/purple_200" />
         </shape>
     </item>
-    <item android:drawable="@color/black" />
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/keyboard_half_key_size" />
+            <solid android:color="@color/black" />
+        </shape>
+    </item>
 </selector>

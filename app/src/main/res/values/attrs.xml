@@ -17,11 +17,12 @@
 <resources>
 
     <declare-styleable name="KeyboardView">
-        <attr name="keyBackground" format="reference"/>
-        <attr name="keyTextSize" format="dimension"/>
-        <attr name="keyTextColorPrimary" format="color"/>
-        <attr name="keyTextColorSecondary" format="color"/>
-        <attr name="labelTextSize" format="dimension"/>
+        <attr name="keyBackground" format="reference" />
+        <attr name="keyTextColorPrimary" format="color" />
+        <attr name="useKeyTextColorSecondary" format="boolean" />
+        <attr name="keyTextColorSecondary" format="color" />
+        <attr name="keyTextSize" format="dimension" />
+        <attr name="labelTextSize" format="dimension" />
         <attr name="fontFamily" format="string" />
         <attr name="textStyle" format="enum">
             <enum name="normal" value="0" />

@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import com.litekite.ime.R
+import com.litekite.ime.util.StringUtil.isPunctuation
 import kotlin.math.max
 
 /**
@@ -61,7 +62,9 @@ class KeyboardView @JvmOverloads constructor(
     private var textStyle = Typeface.NORMAL
     private var keyTextSize = 18
     private var labelTextSize = 14
+    private val keyPunctuationSize: Int
     private var keyTextColorPrimary = -0x1000000
+    private val useKeyTextColorSecondary: Boolean
     private var keyTextColorSecondary = -0x67000000
 
     private var keyboard: Keyboard? = null
@@ -99,21 +102,28 @@ class KeyboardView @JvmOverloads constructor(
         keyBackground = ta.getDrawable(
             R.styleable.KeyboardView_keyBackground
         )
-        keyTextSize = ta.getDimensionPixelSize(
-            R.styleable.KeyboardView_keyTextSize,
-            keyTextSize
-        )
         keyTextColorPrimary = ta.getColor(
             R.styleable.KeyboardView_keyTextColorPrimary,
             keyTextColorPrimary
+        )
+        useKeyTextColorSecondary = ta.getBoolean(
+            R.styleable.KeyboardView_useKeyTextColorSecondary,
+            false
         )
         keyTextColorSecondary = ta.getColor(
             R.styleable.KeyboardView_keyTextColorSecondary,
             keyTextColorSecondary
         )
+        keyTextSize = ta.getDimensionPixelSize(
+            R.styleable.KeyboardView_keyTextSize,
+            keyTextSize
+        )
         labelTextSize = ta.getDimensionPixelSize(
             R.styleable.KeyboardView_labelTextSize,
             labelTextSize
+        )
+        keyPunctuationSize = resources.getDimensionPixelSize(
+            R.dimen.keyboard_view_key_punctuation_height
         )
         fontFamily = ta.getString(
             R.styleable.KeyboardView_fontFamily
@@ -222,7 +232,7 @@ class KeyboardView @JvmOverloads constructor(
             if (key.width != bounds?.right || key.height != bounds.bottom) {
                 keyBackground?.setBounds(0, 0, key.width, key.height)
             }
-            // Save the canvas states before drawing
+            // Save the canvas coordinate states before drawing
             canvas.save()
             // Translate the canvas coordinates to the key x, y position
             canvas.translate((key.x + paddingLeft).toFloat(), (key.y + paddingTop).toFloat())
@@ -230,10 +240,49 @@ class KeyboardView @JvmOverloads constructor(
             keyBackground?.draw(canvas)
             // Switch the character to uppercase if shift is pressed
             val keyLabel = key.adjustCase(getLocale()).toString()
-            if (keyLabel.isEmpty()) {
-
+            if (keyLabel.isNotEmpty()) {
+                // Use primary color for letters and digits, secondary color for everything else
+                paint.color = when {
+                    Character.isLetterOrDigit(keyLabel[0]) -> {
+                        keyTextColorPrimary
+                    }
+                    useKeyTextColorSecondary -> {
+                        keyTextColorSecondary
+                    }
+                    else -> {
+                        keyTextColorPrimary
+                    }
+                }
+                // For characters, use large font. For labels like "Done", use small font.
+                if (keyLabel.length > 1 && key.codes.size < 2) {
+                    paint.textSize = labelTextSize.toFloat()
+                } else if (keyLabel.isPunctuation()) {
+                    paint.textSize = keyPunctuationSize.toFloat()
+                } else {
+                    paint.textSize = keyTextSize.toFloat()
+                }
+                // Draw the text
+                canvas.drawText(
+                    keyLabel,
+                    (key.width - paddingLeft - paddingRight) / 2F + paddingLeft,
+                    (key.height - paddingTop - paddingBottom) / 2F +
+                        (paint.textSize - paint.descent()) / 2F + paddingTop,
+                    paint
+                )
+                // Turn off drop shadow
+                paint.setShadowLayer(0f, 0f, 0f, 0)
+            } else if (key.icon != null) {
+                val x = (
+                    key.width - paddingLeft - paddingRight - key.icon.intrinsicWidth
+                    ) / 2F + paddingLeft
+                val y = (
+                    key.height - paddingTop - paddingBottom - key.icon.intrinsicHeight
+                    ) / 2F + paddingTop
+                canvas.translate(x, y)
+                // Draw the key icon
+                key.icon.draw(canvas)
             }
-            // Restore the canvas states after drawing
+            // Restore the canvas coordinate states after drawing
             canvas.restore()
         }
         drawPending = false

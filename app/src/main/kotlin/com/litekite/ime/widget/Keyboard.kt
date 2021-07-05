@@ -197,7 +197,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                         currentRow = Row(context.resources, parser)
                         rows.add(currentRow)
                         val skipRow = currentRow.keyboardMode != 0 &&
-                                currentRow.keyboardMode != keyboardMode
+                            currentRow.keyboardMode != keyboardMode
                         if (skipRow) {
                             skipToEndOfRow(parser)
                             inRow = false

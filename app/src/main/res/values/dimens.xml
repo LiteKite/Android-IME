@@ -36,5 +36,6 @@
 
     <dimen name="keyboard_view_popup_offset">24dp</dimen>
     <dimen name="keyboard_view_key_text_size">26dp</dimen>
+    <dimen name="keyboard_view_key_punctuation_height">32dp</dimen>
 
 </resources>

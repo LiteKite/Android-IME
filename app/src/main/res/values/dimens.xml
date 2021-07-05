@@ -25,7 +25,7 @@
     <dimen name="keyboard_key_vertical_gap">2dp</dimen>
     <dimen name="keyboard_key_horizontal_tiny_gap">2dp</dimen>
 
-    <dimen name="keyboard_key_space_bar_width">400dp</dimen>
+    <dimen name="keyboard_key_space_bar_width">368dp</dimen>
     <dimen name="keyboard_space_bar_height">16dp</dimen>
     <dimen name="keyboard_key_space_bar_visual_width">248dp</dimen>
     <dimen name="keyboard_space_bar_radius">3dp</dimen>

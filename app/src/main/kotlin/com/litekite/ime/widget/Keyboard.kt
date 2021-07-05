@@ -150,7 +150,7 @@ class Keyboard(context: Context, layoutRes: Int) {
     internal val keys: ArrayList<Key> = ArrayList()
 
     /**
-     * Is the mKeyboardd in the shifted state
+     * Is the Keyboard in the shifted state
      */
     private var isShifted = false
 
@@ -197,7 +197,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                         currentRow = Row(context.resources, parser)
                         rows.add(currentRow)
                         val skipRow = currentRow.keyboardMode != 0 &&
-                            currentRow.keyboardMode != keyboardMode
+                                currentRow.keyboardMode != keyboardMode
                         if (skipRow) {
                             skipToEndOfRow(parser)
                             inRow = false
@@ -396,11 +396,17 @@ class Keyboard(context: Context, layoutRes: Int) {
      */
     inner class Key(
         res: Resources,
-        var x: Int,
-        val y: Int,
+        x: Int,
+        y: Int,
         parser: XmlResourceParser,
         parentRow: Row
     ) {
+
+        /** X coordinate of the key in the Keyboard layout  */
+        val x: Int
+
+        /** Y coordinate of the key in the Keyboard layout  */
+        val y: Int
 
         /** Width of the key, not including the gap */
         internal val width: Int
@@ -482,7 +488,8 @@ class Keyboard(context: Context, layoutRes: Int) {
                 displayWidth,
                 defaultKeyHorizontalGap
             )
-            x += horizontalGap
+            this.x = x + horizontalGap
+            this.y = y
             ta.recycle()
             ta = res.obtainAttributes(
                 Xml.asAttributeSet(parser),

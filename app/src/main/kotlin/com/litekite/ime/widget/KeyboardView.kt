@@ -145,6 +145,7 @@ class KeyboardView @JvmOverloads constructor(
     fun setKeyboard(keyboard: Keyboard) {
         this.keyboard = keyboard
         keyboardChanged = true
+        invalidateAllKeys()
     }
 
     private fun getLocale() = resources.configuration.locales[0]
@@ -166,46 +167,43 @@ class KeyboardView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        // Release the buffer, if any and it will be reallocated on the next draw
-        buffer = null
+        invalidateAllKeys()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (drawPending || buffer == null || keyboardChanged) {
             onBufferDraw()
         }
-        buffer?.let { buffer ->
-            canvas?.drawBitmap(buffer, 0F, 0F, null)
+        val buffer = this.buffer
+        if (buffer != null) {
+            canvas.drawBitmap(buffer, 0F, 0F, null)
         }
     }
 
     private fun onBufferDraw() {
-        if (keyboard == null) {
-            return
-        }
         if (buffer == null || keyboardChanged) {
             if (buffer == null || keyboardChanged &&
-                (buffer?.width != width || buffer?.height != height)
+                (buffer!!.width != width || buffer!!.height != height)
             ) {
                 // Make sure our bitmap is at least 1x1
                 val width = max(1, width)
                 val height = max(1, height)
-                buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                canvas = Canvas(buffer!!)
+                this.buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                this.canvas = Canvas(buffer!!)
             }
-            invalidateAllKeys()
             keyboardChanged = false
-            return
         }
+        val keyboard = this.keyboard ?: return
+        val canvas = this.canvas ?: return
         // Restrict the drawing area to dirtyRect
-        canvas?.clipRect(dirtyRect)
+        canvas.clipRect(dirtyRect)
         // Clear the clipped drawable dirtyRect before drawing
-        canvas?.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
+        canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
         // Move the canvas coordinates to the initial position
-        canvas?.translate(0F, 0F)
+        canvas.translate(0F, 0F)
         // Draw background
-        canvas?.drawRect(
+        canvas.drawRect(
             0F,
             0F,
             width.toFloat(),
@@ -213,27 +211,30 @@ class KeyboardView @JvmOverloads constructor(
             paint
         )
         // Let's draw keyboard
-        keyboard?.let { it ->
-            for (key in it.keys) {
-                // Set drawing state for both keyBackground and keyIcon
-                val drawableState = key.getDrawableState()
-                keyBackground?.state = drawableState
-                key.icon?.state = drawableState
-                // Set keyBackground bound adjusting with key width, height
-                // Both should have the same boundary area.
-                val bounds = keyBackground?.bounds
-                if (key.width != bounds?.right || key.height != bounds.bottom) {
-                    keyBackground?.setBounds(0, 0, key.width, key.height)
-                }
-                // Translate the canvas coordinates to the key x, y position
-                canvas?.translate((key.x + paddingLeft).toFloat(), (key.y + paddingTop).toFloat())
-                // Draw the keyBackground
-                canvas?.let { canvas -> keyBackground?.draw(canvas) }
-                // Switch the character to uppercase if shift is pressed
-                val keyLabel = key.adjustCase(getLocale()).toString()
-                if (keyLabel.isEmpty()) {
-                }
+        for (key in keyboard.keys) {
+            // Set drawing state for both keyBackground and keyIcon
+            val drawableState = key.getDrawableState()
+            keyBackground?.state = drawableState
+            key.icon?.state = drawableState
+            // Set keyBackground bound adjusting with key width, height
+            // Both should have the same boundary area.
+            val bounds = keyBackground?.bounds
+            if (key.width != bounds?.right || key.height != bounds.bottom) {
+                keyBackground?.setBounds(0, 0, key.width, key.height)
             }
+            // Save the canvas states before drawing
+            canvas.save()
+            // Translate the canvas coordinates to the key x, y position
+            canvas.translate((key.x + paddingLeft).toFloat(), (key.y + paddingTop).toFloat())
+            // Draw the keyBackground
+            keyBackground?.draw(canvas)
+            // Switch the character to uppercase if shift is pressed
+            val keyLabel = key.adjustCase(getLocale()).toString()
+            if (keyLabel.isEmpty()) {
+
+            }
+            // Restore the canvas states after drawing
+            canvas.restore()
         }
         drawPending = false
         dirtyRect.setEmpty()

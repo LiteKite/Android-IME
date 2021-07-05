@@ -26,6 +26,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.litekite.ime.R
 import com.litekite.ime.util.StringUtil.isPunctuation
 import kotlin.math.max
@@ -54,11 +55,14 @@ class KeyboardView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
+        private const val SCRIM_ALPHA = 242 // 95% opacity.
         private const val MAX_ALPHA = 255
     }
 
-    private var keyBackground: Drawable? = null
-    private var fontFamily: String? = null
+    private var scrimColor: Int
+    private var scrimAlpha = 0
+    private val keyBackground: Drawable?
+    private val fontFamily: String?
     private var textStyle = Typeface.NORMAL
     private var keyTextSize = 18
     private var labelTextSize = 14
@@ -98,6 +102,13 @@ class KeyboardView @JvmOverloads constructor(
             R.styleable.KeyboardView,
             defStyleAttr,
             0
+        )
+        val color = ContextCompat.getColor(context, R.color.keyboard_scrim_color)
+        scrimColor = Color.argb(
+            SCRIM_ALPHA,
+            Color.red(color),
+            Color.green(color),
+            Color.blue(color)
         )
         keyBackground = ta.getDrawable(
             R.styleable.KeyboardView_keyBackground
@@ -285,6 +296,11 @@ class KeyboardView @JvmOverloads constructor(
             // Restore the canvas coordinate states after drawing
             canvas.restore()
         }
+        // Overlay a dark rectangle to dim the keyboard
+        paint.color = scrimColor
+        paint.alpha = scrimAlpha
+        canvas.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
+        // Reset states
         drawPending = false
         dirtyRect.setEmpty()
     }

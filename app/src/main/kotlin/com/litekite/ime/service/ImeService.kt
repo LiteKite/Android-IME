@@ -22,6 +22,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.litekite.ime.app.ImeApp
 import com.litekite.ime.databinding.LayoutKeyboardViewBinding
+import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.widget.Keyboard
 import java.util.Locale
 
@@ -68,7 +69,7 @@ class ImeService : InputMethodService() {
 
     override fun onCreateInputView(): View {
         ImeApp.printLog(ImeApp.TAG, "onCreateInputView:")
-        binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(this))
+        binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(themeContext()))
         return binding!!.root
     }
 

@@ -25,9 +25,12 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.litekite.ime.R
+import com.litekite.ime.app.ImeApp
+import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.util.StringUtil.isPunctuation
 import kotlin.math.max
 
@@ -35,14 +38,14 @@ import kotlin.math.max
  * A view that renders a virtual {@link Keyboard}. It handles rendering of keys and
  * detecting key presses and touch movements.
  *
- * @attr ref android.R.styleable#KeyboardView_keyBackground
- * @attr ref android.R.styleable#KeyboardView_keyPreviewLayout
- * @attr ref android.R.styleable#KeyboardView_keyPreviewOffset
- * @attr ref android.R.styleable#KeyboardView_labelTextSize
- * @attr ref android.R.styleable#KeyboardView_keyTextSize
- * @attr ref android.R.styleable#KeyboardView_keyTextColor
- * @attr ref android.R.styleable#KeyboardView_verticalCorrection
- * @attr ref android.R.styleable#KeyboardView_popupLayout
+ * @attr ref R.styleable#KeyboardView_keyBackground
+ * @attr ref R.styleable#KeyboardView_keyPreviewLayout
+ * @attr ref R.styleable#KeyboardView_keyPreviewOffset
+ * @attr ref R.styleable#KeyboardView_labelTextSize
+ * @attr ref R.styleable#KeyboardView_keyTextSize
+ * @attr ref R.styleable#KeyboardView_keyTextColor
+ * @attr ref R.styleable#KeyboardView_verticalCorrection
+ * @attr ref R.styleable#KeyboardView_popupLayout
  *
  * @author Vignesh S
  * @version 1.0, 30/06/2021
@@ -55,6 +58,7 @@ class KeyboardView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
+        private val TAG: String = KeyboardView::class.java.simpleName
         private const val SCRIM_ALPHA = 242 // 95% opacity.
         private const val MAX_ALPHA = 255
     }
@@ -73,7 +77,7 @@ class KeyboardView @JvmOverloads constructor(
 
     private var keyboard: Keyboard? = null
 
-    /** Notes if the keyboard just changed, so that we could possibly reallocate the mBuffer.  */
+    /** Notes if the keyboard just changed, so that we could possibly reallocate the buffer.  */
     private var keyboardChanged = false
 
     /** Whether the keyboard bitmap needs to be redrawn before it's blitted.  */
@@ -82,11 +86,19 @@ class KeyboardView @JvmOverloads constructor(
     /** The dirty region in the keyboard bitmap  */
     private val dirtyRect = Rect()
 
+    /** The dirty clip region bounds in the keyboard bitmap  */
+    private val clipRegion = Rect(0, 0, 0, 0)
+
     /** The keyboard bitmap for faster updates  */
     private var buffer: Bitmap? = null
 
     /** The canvas for the above mutable keyboard bitmap  */
     private var canvas: Canvas? = null
+
+    /**
+     * An invalidated key should be redrawn on the next draw.
+     */
+    private var invalidatedKey: Keyboard.Key? = null
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -152,7 +164,7 @@ class KeyboardView @JvmOverloads constructor(
         }
         if (isInEditMode) {
             val keyboard = Keyboard(
-                context,
+                context.themeContext(),
                 resources.getIdentifier(
                     Keyboard.LAYOUT_KEYBOARD_QWERTY,
                     Keyboard.DEF_TYPE,
@@ -172,6 +184,7 @@ class KeyboardView @JvmOverloads constructor(
     private fun getLocale() = resources.configuration.locales[0]
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val keyboard = this.keyboard
         if (keyboard == null) {
             setMeasuredDimension(
                 paddingLeft + paddingRight,
@@ -180,8 +193,8 @@ class KeyboardView @JvmOverloads constructor(
             return
         } else {
             setMeasuredDimension(
-                keyboard!!.keyboardWidth + paddingLeft + paddingRight,
-                keyboard!!.keyboardHeight + paddingTop + paddingBottom
+                keyboard.keyboardWidth + paddingLeft + paddingRight,
+                keyboard.keyboardHeight + paddingTop + paddingBottom
             )
         }
     }
@@ -219,6 +232,19 @@ class KeyboardView @JvmOverloads constructor(
         val canvas = this.canvas ?: return
         // Restrict the drawing area to dirtyRect
         canvas.clipRect(dirtyRect)
+        // If there is an invalidated key, draw it alone, not all the keys.
+        val invalidatedKey = this.invalidatedKey
+        var drawSingleKey = false
+        if (invalidatedKey != null && canvas.getClipBounds(clipRegion)) {
+            // Is clipRegion completely contained within the invalidated key?
+            if (invalidatedKey.x + paddingLeft - 1 <= clipRegion.left &&
+                invalidatedKey.y + paddingTop - 1 <= clipRegion.top &&
+                invalidatedKey.x + invalidatedKey.width + paddingLeft + 1 >= clipRegion.right &&
+                invalidatedKey.y + invalidatedKey.height + paddingTop + 1 >= clipRegion.bottom
+            ) {
+                drawSingleKey = true
+            }
+        }
         // Clear the clipped drawable dirtyRect before drawing
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
         // Move the canvas coordinates to the initial position
@@ -233,6 +259,10 @@ class KeyboardView @JvmOverloads constructor(
         )
         // Let's draw keyboard
         for (key in keyboard.keys) {
+            // If there is an invalidated key, draw it alone, not all the keys.
+            if (drawSingleKey && invalidatedKey != key) {
+                continue
+            }
             // Set drawing state for both keyBackground and keyIcon
             val drawableState = key.getDrawableState()
             keyBackground?.state = drawableState
@@ -302,12 +332,13 @@ class KeyboardView @JvmOverloads constructor(
         canvas.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
         // Reset states
         drawPending = false
+        this.invalidatedKey = null
         dirtyRect.setEmpty()
     }
 
     /**
-     * Requests a redraw of the entire keyboard. Calling [.invalidate] is not sufficient
-     * because the keyboard renders the keys to an off-screen buffer and an invalidate() only
+     * Requests a redraw of the entire keyboard. Calling [invalidate] is not sufficient
+     * because the keyboard renders the keys to an off-screen buffer and an [invalidate] only
      * draws the cached buffer.
      * @see [invalidateKey]
      */
@@ -317,6 +348,62 @@ class KeyboardView @JvmOverloads constructor(
         postInvalidate()
     }
 
-    private fun invalidateKey() {
+    /**
+     * Invalidates a key so that it will be redrawn on the next repaint. Use this method if only
+     * one key is changing it's content. Any changes that affect the position or size of the key
+     * may not be honored.
+     * @param keyIndex the index of the key in the attached [Keyboard].
+     * @see [invalidateAllKeys]
+     */
+    private fun invalidateKey(keyIndex: Int) {
+        val keyboard = this.keyboard ?: return
+        val keys = keyboard.keys
+        if (keyIndex < 0 || keyIndex >= keys.size) {
+            return
+        }
+        val key = keys[keyIndex]
+        this.invalidatedKey = key
+        // Restricting (clipping) drawing area to the single invalidated key
+        val left = key.x + paddingLeft
+        val top = key.y + paddingTop
+        val right = key.x + key.width + paddingLeft
+        val bottom = key.y + key.height + paddingTop
+        dirtyRect.union(left, top, right, bottom)
+        // Redraw the canvas for the single invalidated key
+        onBufferDraw()
+        // Invalidate to draw the buffer again
+        postInvalidate()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        // TODO: 06-07-2021 WIP find key based on x and y touch and invalidate
+        // Convert multi-pointer up/down events to single up/down events to
+        // deal with the typical multi-pointer behavior of two-thumb typing
+        val pointerCount = event.pointerCount
+        var result = false
+        if (pointerCount == 1) {
+            result = onModifiedTouchEvent(event)
+        }
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            keyboard!!.keys[0].onPressed()
+        }
+        if (event.action == MotionEvent.ACTION_UP) {
+            performClick()
+            keyboard!!.keys[0].onReleased(true)
+        }
+        invalidateKey(0)
+        return result
+    }
+
+    private fun onModifiedTouchEvent(event: MotionEvent): Boolean {
+        // TODO: 06-07-2021 WIP find key based on x and y touch and invalidate
+        val touchX = event.x - paddingLeft
+        val touchY = event.y - paddingTop
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        ImeApp.printLog(TAG, "performClick")
+        return super.performClick()
     }
 }

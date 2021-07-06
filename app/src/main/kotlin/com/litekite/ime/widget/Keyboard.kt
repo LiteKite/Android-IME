@@ -37,22 +37,22 @@ import java.util.Locale
  *
  * <pre>
  * &lt;keyboard
- *         android:keyWidth="%10p"
- *         android:keyHeight="50px"
- *         android:keyHorizontalGap="2px"
- *         android:keyVerticalGap="2px" &gt;
- *     &lt;Row android:keyWidth="32px" &gt;
- *         &lt;Key android:keyLabel="A" /&gt;
+ *         app:keyWidth="%10p"
+ *         app:keyHeight="50px"
+ *         app:keyHorizontalGap="2px"
+ *         app:keyVerticalGap="2px" &gt;
+ *     &lt;Row app:keyWidth="32px" &gt;
+ *         &lt;Key app:keyLabel="A" /&gt;
  *         ...
  *     &lt;/Row&gt;
  *     ...
  * &lt;/keyboard&gt;
  * </pre>
  *
- * @attr ref android.R.styleable#Keyboard_keyWidth
- * @attr ref android.R.styleable#Keyboard_keyHeight
- * @attr ref android.R.styleable#Keyboard_keyHorizontalGap
- * @attr ref android.R.styleable#Keyboard_keyVerticalGap
+ * @attr ref R.styleable#Keyboard_keyWidth
+ * @attr ref R.styleable#Keyboard_keyHeight
+ * @attr ref R.styleable#Keyboard_keyHorizontalGap
+ * @attr ref R.styleable#Keyboard_keyVerticalGap
  *
  * @author Vignesh S
  * @version 1.0, 14/06/2021
@@ -295,12 +295,12 @@ class Keyboard(context: Context, layoutRes: Int) {
      * Some of the key size defaults can be overridden per row from what the {@link Keyboard}
      * defines.
      *
-     * @attr ref android.R.styleable#Keyboard_keyWidth
-     * @attr ref android.R.styleable#Keyboard_keyHeight
-     * @attr ref android.R.styleable#Keyboard_keyHorizontalGap
-     * @attr ref android.R.styleable#Keyboard_keyVerticalGap
-     * @attr ref android.R.styleable#Keyboard_Row_rowEdgeFlags
-     * @attr ref android.R.styleable#Keyboard_Row_keyboardMode
+     * @attr ref R.styleable#Keyboard_keyWidth
+     * @attr ref R.styleable#Keyboard_keyHeight
+     * @attr ref R.styleable#Keyboard_keyHorizontalGap
+     * @attr ref R.styleable#Keyboard_keyVerticalGap
+     * @attr ref R.styleable#Keyboard_Row_rowEdgeFlags
+     * @attr ref R.styleable#Keyboard_Row_keyboardMode
      */
     inner class Row(res: Resources, parser: XmlResourceParser) {
 
@@ -379,20 +379,20 @@ class Keyboard(context: Context, layoutRes: Int) {
     /**
      * Class for describing the position and characteristics of a single key in the Keyboard.
      *
-     * @attr ref android.R.styleable#Keyboard_keyWidth
-     * @attr ref android.R.styleable#Keyboard_keyHeight
-     * @attr ref android.R.styleable#Keyboard_keyHorizontalGap
-     * @attr ref android.R.styleable#Keyboard_Key_codes
-     * @attr ref android.R.styleable#Keyboard_Key_keyIcon
-     * @attr ref android.R.styleable#Keyboard_Key_keyLabel
-     * @attr ref android.R.styleable#Keyboard_Key_iconPreview
-     * @attr ref android.R.styleable#Keyboard_Key_isSticky
-     * @attr ref android.R.styleable#Keyboard_Key_isRepeatable
-     * @attr ref android.R.styleable#Keyboard_Key_isModifier
-     * @attr ref android.R.styleable#Keyboard_Key_popupKeyboard
-     * @attr ref android.R.styleable#Keyboard_Key_popupCharacters
-     * @attr ref android.R.styleable#Keyboard_Key_keyOutputText
-     * @attr ref android.R.styleable#Keyboard_Key_keyEdgeFlags
+     * @attr ref R.styleable#Keyboard_keyWidth
+     * @attr ref R.styleable#Keyboard_keyHeight
+     * @attr ref R.styleable#Keyboard_keyHorizontalGap
+     * @attr ref R.styleable#Keyboard_Key_codes
+     * @attr ref R.styleable#Keyboard_Key_keyIcon
+     * @attr ref R.styleable#Keyboard_Key_keyLabel
+     * @attr ref R.styleable#Keyboard_Key_iconPreview
+     * @attr ref R.styleable#Keyboard_Key_isSticky
+     * @attr ref R.styleable#Keyboard_Key_isRepeatable
+     * @attr ref R.styleable#Keyboard_Key_isModifier
+     * @attr ref R.styleable#Keyboard_Key_popupKeyboard
+     * @attr ref R.styleable#Keyboard_Key_popupCharacters
+     * @attr ref R.styleable#Keyboard_Key_keyOutputText
+     * @attr ref R.styleable#Keyboard_Key_keyEdgeFlags
      */
     inner class Key(
         res: Resources,
@@ -546,6 +546,39 @@ class Keyboard(context: Context, layoutRes: Int) {
                 label = label.toString().uppercase(locale)
             }
             return label
+        }
+
+        /**
+         * Informs the key that it has been pressed, in case it needs to change its appearance or
+         * state.
+         * @see [onReleased]
+         */
+        fun onPressed() {
+            pressed = !pressed
+        }
+
+        /**
+         * Changes the pressed state of the key.
+         *
+         * <p>Toggled state of the key will be flipped when all the following conditions are
+         * fulfilled:</p>
+         *
+         * <ul>
+         *     <li>This is a sticky key, that is, {@link #sticky} is {@code true}.
+         *     <li>The parameter {@code inside} is {@code true}.
+         *     <li>{@link android.os.Build.VERSION#SDK_INT} is greater than
+         *         {@link android.os.Build.VERSION_CODES#LOLLIPOP_MR1}.
+         * </ul>
+         *
+         * @param inside whether the finger was released inside the key. Works only on Android M and
+         * later. See the method document for details.
+         * @see #onPressed()
+         */
+        fun onReleased(inside: Boolean) {
+            pressed = !pressed
+            if (sticky && inside) {
+                isOn = !isOn
+            }
         }
 
         /**

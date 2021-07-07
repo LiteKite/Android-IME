@@ -69,6 +69,7 @@
 
     <Row>
         <Key
+            app:keyEdgeFlags="left"
             app:keyHorizontalGap="@dimen/keyboard_half_key_size"
             app:keyLabel="a"
             app:popupCharacters="@string/alternates_for_a"

@@ -72,11 +72,11 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val TAG_ROW = "Row"
         const val TAG_KEY = "Key"
 
-        /** Row edge flags */
-        const val ROW_EDGE_LEFT = 0x01
-        const val ROW_EDGE_RIGHT = 0x02
-        const val ROW_EDGE_TOP = 0x04
-        const val ROW_EDGE_BOTTOM = 0x08
+        /** Edge flags */
+        const val EDGE_LEFT = 0x01
+        const val EDGE_RIGHT = 0x02
+        const val EDGE_TOP = 0x04
+        const val EDGE_BOTTOM = 0x08
 
         /** Modifier keys */
         const val KEYCODE_SHIFT = -1
@@ -249,21 +249,6 @@ class Keyboard(context: Context, layoutRes: Int) {
         keyboardHeight = y - defaultKeyVerticalGap
     }
 
-    fun setShifted(shiftState: Boolean): Boolean {
-        for (shiftKey in shiftKeys) {
-            if (shiftKey != null) {
-                shiftKey.isOn = shiftState
-            }
-        }
-        if (isShifted != shiftState) {
-            isShifted = shiftState
-            return true
-        }
-        return false
-    }
-
-    fun getShiftKeyIndex(): Int = shiftKeyIndices[0]
-
     private fun parseKeyboardAttributes(res: Resources, parser: XmlResourceParser) {
         parser.require(XmlPullParser.START_TAG, null, TAG_KEYBOARD)
         val ta = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard)
@@ -289,6 +274,36 @@ class Keyboard(context: Context, layoutRes: Int) {
         )
         ta.recycle()
     }
+
+    /**
+     * Returns the index of the key that the touch point falls into it.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     *
+     * @return the index of the key.
+     */
+    fun getKeyIndex(x: Int, y: Int): Int {
+        for (index in keys.indices) {
+            if (keys[index].isInside(x, y)) return index
+        }
+        return 0
+    }
+
+    fun setShifted(shiftState: Boolean): Boolean {
+        for (shiftKey in shiftKeys) {
+            if (shiftKey != null) {
+                shiftKey.isOn = shiftState
+            }
+        }
+        if (isShifted != shiftState) {
+            isShifted = shiftState
+            return true
+        }
+        return false
+    }
+
+    fun getShiftKeyIndex(): Int = shiftKeyIndices[0]
 
     /**
      * Container for keys in the Keyboard. All keys in a row are at the same Y-coordinate.
@@ -436,8 +451,8 @@ class Keyboard(context: Context, layoutRes: Int) {
          * Flags that specify the anchoring to edges of the Keyboard for detecting touch events
          * that are just out of the boundary of the key.
          *
-         * Possible values that can be assigned are {@link Keyboard#ROW_EDGE_TOP ROW_EDGE_LEFT}
-         * and {@link Keyboard#ROW_EDGE_BOTTOM ROW_EDGE_BOTTOM}
+         * Possible values that can be assigned are {@link Keyboard#KEY_EDGE_TOP KEY_EDGE_LEFT}
+         * and {@link Keyboard#KEY_EDGE_BOTTOM KEY_EDGE_BOTTOM}
          */
         private val edgeFlags: Int
 
@@ -539,6 +554,29 @@ class Keyboard(context: Context, layoutRes: Int) {
                 codes = intArrayOf(label[0].code)
             }
             ta.recycle()
+        }
+
+        /**
+         * Detects if a point falls inside this key.
+         *
+         * @param x the x-coordinate of the point
+         * @param y the y-coordinate of the point
+         *
+         * @return whether or not the point falls inside the key. If the key is attached to an edge,
+         * it will assume that all points between the key and the edge are considered to be inside
+         * the key.
+         */
+        fun isInside(x: Int, y: Int): Boolean {
+            val leftEdge = edgeFlags and EDGE_LEFT > 0
+            val rightEdge = edgeFlags and EDGE_RIGHT > 0
+            val topEdge = edgeFlags and EDGE_TOP > 0
+            val bottomEdge = edgeFlags and EDGE_BOTTOM > 0
+            return (
+                (x >= this.x || leftEdge && x <= this.x + width) &&
+                    (x < this.x + width || rightEdge && x >= this.x) &&
+                    (y >= this.y || topEdge && y <= this.y + height) &&
+                    (y < this.y + height || bottomEdge && y >= this.y)
+                )
         }
 
         fun adjustCase(locale: Locale): CharSequence {

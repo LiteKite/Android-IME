@@ -44,7 +44,6 @@ import kotlin.math.max
  * @attr ref R.styleable#KeyboardView_labelTextSize
  * @attr ref R.styleable#KeyboardView_keyTextSize
  * @attr ref R.styleable#KeyboardView_keyTextColor
- * @attr ref R.styleable#KeyboardView_verticalCorrection
  * @attr ref R.styleable#KeyboardView_popupLayout
  *
  * @author Vignesh S
@@ -376,29 +375,35 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 06-07-2021 WIP find key based on x and y touch and invalidate
+        // TODO: 06-07-2021 WIP fix touched key is not highlighting in UI
         // Convert multi-pointer up/down events to single up/down events to
         // deal with the typical multi-pointer behavior of two-thumb typing
-        val pointerCount = event.pointerCount
-        var result = false
-        if (pointerCount == 1) {
-            result = onModifiedTouchEvent(event)
-        }
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            keyboard!!.keys[0].onPressed()
-        }
+        val result = onModifiedTouchEvent(event)
         if (event.action == MotionEvent.ACTION_UP) {
             performClick()
-            keyboard!!.keys[0].onReleased(true)
         }
-        invalidateKey(0)
         return result
     }
 
     private fun onModifiedTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 06-07-2021 WIP find key based on x and y touch and invalidate
-        val touchX = event.x - paddingLeft
-        val touchY = event.y - paddingTop
+        // TODO: 06-07-2021 WIP fix touched key is not highlighting in UI
+        val keyboard = this.keyboard ?: return true
+        val touchX = (event.x - paddingLeft).toInt()
+        val touchY = (event.y - paddingTop).toInt()
+        val keyIndex = keyboard.getKeyIndex(touchX, touchY)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                keyboard.keys[keyIndex].onPressed()
+                invalidateKey(keyIndex)
+            }
+            MotionEvent.ACTION_UP -> {
+                keyboard.keys[keyIndex].onReleased(true)
+                invalidateKey(keyIndex)
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                invalidateKey(keyIndex)
+            }
+        }
         return true
     }
 

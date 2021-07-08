@@ -91,6 +91,9 @@ class KeyboardView @JvmOverloads constructor(
     /** The canvas for the above mutable keyboard bitmap  */
     private var canvas: Canvas? = null
 
+    /** Touch properties  */
+    private var currentKeyIndex: Int = Keyboard.NOT_A_KEY
+
     private val paint = Paint().apply {
         isAntiAlias = true
         textSize = keyTextSize.toFloat()
@@ -361,34 +364,55 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 06-07-2021 WIP fix touched key is not highlighting in UI
+        // TODO: 08-07-2021 WIP Handle multi-pointer motion event
+        // TODO: 08-07-2021 WIP fix vertical gap, space bar key, edgeFlags, change key icons
+        // TODO: 08-07-2021 WIP Themes and Styles for Day/Night Mode
         // Convert multi-pointer up/down events to single up/down events to
         // deal with the typical multi-pointer behavior of two-thumb typing
-        val result = onModifiedTouchEvent(event)
+        val result = handleTouchEvent(event)
         if (event.action == MotionEvent.ACTION_UP) {
             performClick()
         }
         return result
     }
 
-    private fun onModifiedTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 06-07-2021 WIP fix touched key is not highlighting in UI
+    private fun handleTouchEvent(event: MotionEvent): Boolean {
         val keyboard = this.keyboard ?: return true
+        val keys = keyboard.keys
         val touchX = (event.x - paddingLeft).toInt()
         val touchY = (event.y - paddingTop).toInt()
-        val keyIndex = keyboard.getKeyIndex(touchX, touchY)
-        if (keyIndex == Keyboard.NOT_A_KEY) return true
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                keyboard.keys[keyIndex].onPressed()
-                invalidateKey(keyIndex)
+                val keyIndex = keyboard.getKeyIndex(touchX, touchY)
+                if (keyIndex == Keyboard.NOT_A_KEY) {
+                    return true
+                }
+                val currentKey = keys[keyIndex]
+                currentKey.onPressed()
+                currentKeyIndex = keyIndex
+                invalidateKey(currentKeyIndex)
             }
-            MotionEvent.ACTION_UP -> {
-                keyboard.keys[keyIndex].onReleased(true)
-                invalidateKey(keyIndex)
+            MotionEvent.ACTION_MOVE -> {
+                if (currentKeyIndex == Keyboard.NOT_A_KEY) {
+                    return true
+                }
+                val currentKey = keys[currentKeyIndex]
+                if (currentKey.isPressed && !currentKey.isInside(touchX, touchY)) {
+                    currentKey.onReleased(false)
+                    invalidateKey(currentKeyIndex)
+                }
             }
+            MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL -> {
-                invalidateKey(keyIndex)
+                if (currentKeyIndex == Keyboard.NOT_A_KEY) {
+                    return true
+                }
+                val currentKey = keys[currentKeyIndex]
+                if (currentKey.isPressed) {
+                    val isInside = currentKey.isInside(touchX, touchY)
+                    currentKey.onReleased(isInside)
+                    invalidateKey(currentKeyIndex)
+                }
             }
         }
         return true

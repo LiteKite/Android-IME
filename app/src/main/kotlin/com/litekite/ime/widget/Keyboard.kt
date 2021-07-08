@@ -485,7 +485,8 @@ class Keyboard(context: Context, layoutRes: Int) {
         /**
          * The current pressed state of this key
          */
-        private var pressed = false
+        private var _isPressed = false
+        internal val isPressed get() = _isPressed
 
         init {
             parser.require(XmlPullParser.START_TAG, null, TAG_KEY)
@@ -594,7 +595,7 @@ class Keyboard(context: Context, layoutRes: Int) {
          * @see [onReleased]
          */
         fun onPressed() {
-            pressed = !pressed
+            _isPressed = true
         }
 
         /**
@@ -615,7 +616,7 @@ class Keyboard(context: Context, layoutRes: Int) {
          * @see #onPressed()
          */
         fun onReleased(inside: Boolean) {
-            pressed = !pressed
+            _isPressed = false
             if (sticky && inside) {
                 isOn = !isOn
             }
@@ -630,20 +631,20 @@ class Keyboard(context: Context, layoutRes: Int) {
         fun getDrawableState(): IntArray {
             var states: IntArray = KEY_STATE_NORMAL
             if (isOn) {
-                states = if (pressed) {
+                states = if (_isPressed) {
                     KEY_STATE_PRESSED_ON
                 } else {
                     KEY_STATE_NORMAL_ON
                 }
             } else {
                 if (sticky) {
-                    states = if (pressed) {
+                    states = if (_isPressed) {
                         KEY_STATE_PRESSED_OFF
                     } else {
                         KEY_STATE_NORMAL_OFF
                     }
                 } else {
-                    if (pressed) {
+                    if (_isPressed) {
                         states = KEY_STATE_PRESSED
                     }
                 }

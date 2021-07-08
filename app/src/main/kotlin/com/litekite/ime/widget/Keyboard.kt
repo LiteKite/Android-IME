@@ -86,6 +86,8 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val KEYCODE_DELETE = -5
         const val KEYCODE_ALT = -6
 
+        const val NOT_A_KEY = -1
+
         /** Keyboard key drawable states */
         private val KEY_STATE_NORMAL = intArrayOf()
 
@@ -287,7 +289,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         for (index in keys.indices) {
             if (keys[index].isInside(x, y)) return index
         }
-        return 0
+        return NOT_A_KEY
     }
 
     fun setShifted(shiftState: Boolean): Boolean {

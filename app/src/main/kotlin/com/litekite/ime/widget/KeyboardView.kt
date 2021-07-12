@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import androidx.core.content.ContextCompat
 import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
@@ -92,15 +93,27 @@ class KeyboardView @JvmOverloads constructor(
     /** The canvas for the above mutable keyboard bitmap  */
     private var canvas: Canvas? = null
 
-    /** Touch properties  */
-    private var currentKeyIndex: Int = Keyboard.NOT_A_KEY
-
     private val paint = Paint().apply {
         isAntiAlias = true
         textSize = keyTextSize.toFloat()
         textAlign = Paint.Align.CENTER
         alpha = MAX_ALPHA
         color = Color.TRANSPARENT
+    }
+
+    /** Touch properties  */
+    private var currentKeyIndex: Int = Keyboard.NOT_A_KEY
+    private var abortKey = false
+
+    /** Variables for dealing with multiple pointers */
+    private var lastPointerCount = 1
+    private var lastPointerX = 0f
+    private var lastPointerY = 0f
+
+    private val performLongPress = Runnable {
+        if (isPressed && isLongClickable) {
+            performLongClick()
+        }
     }
 
     init {
@@ -171,9 +184,18 @@ class KeyboardView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Attaches a keyboard to this view. The keyboard can be switched at any time and the
+     * view will re-layout itself to accommodate the keyboard.
+     * @see Keyboard
+     * @param keyboard the keyboard to display in this view
+     */
     fun setKeyboard(keyboard: Keyboard) {
+        removeCallbacks(performLongPress)
         this.keyboard = keyboard
+        abortKey = true // Perform touch only until the next ACTION_DOWN
         keyboardChanged = true
+        currentKeyIndex = Keyboard.NOT_A_KEY
         invalidateAllKeys()
     }
 
@@ -366,25 +388,79 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 08-07-2021 WIP Handle multi-pointer motion event
         // TODO: 08-07-2021 WIP fix vertical gap, space bar key, edgeFlags, change key icons
         // TODO: 08-07-2021 WIP Themes and Styles for Day/Night Mode
+        // TODO: 12-07-2021 Add Key Preview popup window and popup characters window
+        // TODO: 12-07-2021 Screen size support for all DPIs and flexible key sizes
         // Convert multi-pointer up/down events to single up/down events to
         // deal with the typical multi-pointer behavior of two-thumb typing
-        val result = handleTouchEvent(event)
+        val pointerCount = event.pointerCount
+        var result: Boolean
+        if (pointerCount == lastPointerCount) {
+            // Single Pointer
+            if (pointerCount == 1) {
+                result = handleTouchEvent(event)
+                lastPointerX = event.x
+                lastPointerY = event.y
+            } else {
+                // Don't do anything when multi pointers are down and moving.
+                result = true
+            }
+        } else {
+            // Single pointer
+            if (pointerCount == 1) {
+                // Send a down event for the latest pointer
+                val down = MotionEvent.obtain(
+                    event.eventTime,
+                    event.eventTime,
+                    MotionEvent.ACTION_DOWN,
+                    event.x,
+                    event.y,
+                    event.metaState
+                )
+                result = handleTouchEvent(down)
+                down.recycle()
+                // If it's an up action, then deliver the up as well.
+                if (event.action == MotionEvent.ACTION_UP) {
+                    result = handleTouchEvent(event)
+                }
+            } else {
+                // Multi pointers
+                // Send an up event for the last pointer
+                val up = MotionEvent.obtain(
+                    event.eventTime,
+                    event.eventTime,
+                    MotionEvent.ACTION_UP,
+                    lastPointerX,
+                    lastPointerY,
+                    event.metaState
+                )
+                result = handleTouchEvent(up)
+                up.recycle()
+            }
+        }
         if (event.action == MotionEvent.ACTION_UP) {
             performClick()
         }
+        lastPointerCount = pointerCount
         return result
     }
 
     private fun handleTouchEvent(event: MotionEvent): Boolean {
         val keyboard = this.keyboard ?: return true
+        // Ignore all motion events until a DOWN.
+        if (abortKey &&
+            event.action != MotionEvent.ACTION_DOWN &&
+            event.action != MotionEvent.ACTION_CANCEL
+        ) {
+            return true
+        }
         val keys = keyboard.keys
         val touchX = (event.x - paddingLeft).toInt()
         val touchY = (event.y - paddingTop).toInt()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                abortKey = false
                 val keyIndex = keyboard.getKeyIndex(touchX, touchY)
                 if (keyIndex == Keyboard.NOT_A_KEY) {
                     return true
@@ -392,9 +468,11 @@ class KeyboardView @JvmOverloads constructor(
                 val currentKey = keys[keyIndex]
                 currentKey.onPressed()
                 currentKeyIndex = keyIndex
+                postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 invalidateKey(currentKeyIndex)
             }
             MotionEvent.ACTION_MOVE -> {
+                removeCallbacks(performLongPress)
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
@@ -403,9 +481,12 @@ class KeyboardView @JvmOverloads constructor(
                     currentKey.onReleased(false)
                     invalidateKey(currentKeyIndex)
                 }
+                postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
             }
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL -> {
+                abortKey = true
+                removeCallbacks(performLongPress)
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }

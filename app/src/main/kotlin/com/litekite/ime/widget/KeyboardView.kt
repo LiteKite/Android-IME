@@ -65,6 +65,7 @@ class KeyboardView @JvmOverloads constructor(
     private var scrimColor: Int
     private var scrimAlpha = 0
     private val keyBackground: Drawable?
+    private val keyBgPadding = Rect(0, 0, 0, 0)
     private val fontFamily: String?
     private var textStyle = Typeface.NORMAL
     private var keyTextSize = 18
@@ -119,6 +120,7 @@ class KeyboardView @JvmOverloads constructor(
         keyBackground = ta.getDrawable(
             R.styleable.KeyboardView_keyBackground
         )
+        keyBackground?.getPadding(keyBgPadding)
         keyTextColorPrimary = ta.getColor(
             R.styleable.KeyboardView_keyTextColorPrimary,
             keyTextColorPrimary
@@ -303,20 +305,20 @@ class KeyboardView @JvmOverloads constructor(
             // Draw the text
             canvas.drawText(
                 keyLabel,
-                (key.width - paddingLeft - paddingRight) / 2F + paddingLeft,
-                (key.height - paddingTop - paddingBottom) / 2F +
-                    (paint.textSize - paint.descent()) / 2F + paddingTop,
+                (key.width - keyBgPadding.left - keyBgPadding.right) / 2F + keyBgPadding.left,
+                (key.height - keyBgPadding.top - keyBgPadding.bottom) / 2F +
+                    (paint.textSize - paint.descent()) / 2F + keyBgPadding.top,
                 paint
             )
             // Turn off drop shadow
             paint.setShadowLayer(0f, 0f, 0f, 0)
         } else if (key.icon != null) {
             val x = (
-                key.width - paddingLeft - paddingRight - key.icon.intrinsicWidth
-                ) / 2F + paddingLeft
+                key.width - keyBgPadding.left - keyBgPadding.right - key.icon.intrinsicWidth
+                ) / 2F + keyBgPadding.left
             val y = (
-                key.height - paddingTop - paddingBottom - key.icon.intrinsicHeight
-                ) / 2F + paddingTop
+                key.height - keyBgPadding.top - keyBgPadding.bottom - key.icon.intrinsicHeight
+                ) / 2F + keyBgPadding.top
             canvas.translate(x, y)
             // Draw the key icon
             key.icon.draw(canvas)

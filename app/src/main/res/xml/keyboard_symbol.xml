@@ -49,19 +49,18 @@
         <Key
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyLabel="0" />
-
         <Key
             app:codes="@integer/keycode_delete"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:isRepeatable="true"
             app:keyEdgeFlags="right"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_backspace" />
     </Row>
 
     <Row>
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
             app:keyEdgeFlags="left"
+            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
             app:keyLabel="\#" />
         <Key
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
@@ -90,6 +89,7 @@
         <Key
             app:codes="@integer/keycode_return"
             app:keyEdgeFlags="right"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_return" />
     </Row>
 
@@ -125,8 +125,8 @@
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyLabel="&lt;" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyEdgeFlags="right"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyLabel="&gt;" />
     </Row>
 
@@ -143,19 +143,19 @@
             app:keyLabel="`" />
         <Key
             app:codes="@integer/keycode_space"
-            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_space_bar"
             app:keyWidth="@dimen/keyboard_key_space_bar_width" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_half_key_size"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyLabel="[" />
         <Key
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyLabel="]" />
         <Key
             app:codes="@integer/keycode_mode_change"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyEdgeFlags="right"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_qwerty" />
     </Row>
 

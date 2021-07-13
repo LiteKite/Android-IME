@@ -35,6 +35,7 @@ import com.litekite.ime.app.ImeApp
 import com.litekite.ime.base.CallbackProvider
 import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.util.StringUtil.isPunctuation
+import java.util.Locale
 import kotlin.math.max
 
 /**
@@ -82,7 +83,7 @@ class KeyboardView @JvmOverloads constructor(
     private val useKeyTextColorSecondary: Boolean
     private var keyTextColorSecondary = -0x67000000
 
-    private var keyboard: Keyboard? = null
+    internal var keyboard: Keyboard? = null
 
     /** Notes if the keyboard just changed, so that we could possibly reallocate the buffer.  */
     private var keyboardChanged = false
@@ -245,7 +246,7 @@ class KeyboardView @JvmOverloads constructor(
         return keyboard?.isShifted ?: return false
     }
 
-    private fun getLocale() = resources.configuration.locales[0]
+    fun getLocale(): Locale = resources.configuration.locales[0]
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val keyboard = this.keyboard
@@ -291,11 +292,11 @@ class KeyboardView @JvmOverloads constructor(
                 canvas = Canvas(buffer!!)
             }
             keyboardChanged = false
-        } else {
-            canvas?.setBitmap(buffer)
         }
         val keyboard = this.keyboard ?: return
         val canvas = this.canvas ?: return
+        // Set the Bitmap
+        canvas.setBitmap(buffer)
         // Restrict the drawing area to dirtyRect
         canvas.clipRect(dirtyRect)
         // Clear the clipped drawable dirtyRect before drawing

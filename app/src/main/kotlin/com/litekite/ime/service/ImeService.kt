@@ -41,6 +41,7 @@ class ImeService : InputMethodService() {
         const val DEFAULT_LOCALE = "en"
     }
 
+    private var editorInfo: EditorInfo? = null
     private lateinit var qwertyKeyboard: Keyboard
     private lateinit var symbolKeyboard: Keyboard
 
@@ -55,6 +56,34 @@ class ImeService : InputMethodService() {
                 Keyboard.KEYCODE_SHIFT -> {
                     // Toggle Capitalization
                     binding.vKeyboard.setShifted(!binding.vKeyboard.isShifted())
+                }
+                Keyboard.KEYCODE_MODE_CHANGE -> {
+                    if (binding.vKeyboard.keyboard === qwertyKeyboard) {
+                        binding.vKeyboard.setKeyboard(symbolKeyboard)
+                    } else {
+                        binding.vKeyboard.setKeyboard(qwertyKeyboard)
+                    }
+                }
+                Keyboard.KEYCODE_DONE -> {
+                    val info = editorInfo ?: return
+                    val action = info.imeOptions and EditorInfo.IME_MASK_ACTION
+                    currentInputConnection.performEditorAction(action)
+                }
+                Keyboard.KEYCODE_DELETE -> {
+                    currentInputConnection.deleteSurroundingText(1, 0)
+                }
+                Keyboard.KEYCODE_CLOSE_KEYBOARD -> {
+                    requestHideSelf(0)
+                }
+                else -> {
+                    var commitText = Char(primaryCode).toString()
+                    // Chars always come through as lowercase, so we have to explicitly
+                    // uppercase them if the keyboard is shifted.
+                    if (binding.vKeyboard.isShifted()) {
+                        commitText = commitText.uppercase(binding.vKeyboard.getLocale())
+                    }
+                    ImeApp.printLog(TAG, "onKey: commitText: $commitText")
+                    currentInputConnection.commitText(commitText, 1)
                 }
             }
         }
@@ -99,6 +128,7 @@ class ImeService : InputMethodService() {
         super.onStartInputView(info, restarting)
         ImeApp.printLog(ImeApp.TAG, "onStartInputView:")
         val binding = this.binding ?: return
+        editorInfo = info
         binding.vKeyboard.setKeyboard(qwertyKeyboard)
         binding.vKeyboard.addCallback(keyboardActionListener)
         binding.vKeyboard.setShifted(info.initialCapsMode != 0)

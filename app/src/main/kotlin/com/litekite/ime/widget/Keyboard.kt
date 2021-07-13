@@ -85,6 +85,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val KEYCODE_DONE = -4
         const val KEYCODE_DELETE = -5
         const val KEYCODE_ALT = -6
+        const val KEYCODE_CLOSE_KEYBOARD = -99
 
         const val NOT_A_KEY = -1
 

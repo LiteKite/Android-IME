@@ -468,7 +468,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         internal var isOn = false
 
         /** Whether this key repeats itself when held down  */
-        private val repeatable: Boolean
+        internal val isRepeatable: Boolean
 
         /** Preview version of the icon, for the preview popup  */
         private val iconPreview: Drawable?
@@ -542,7 +542,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 R.styleable.Keyboard_Key_isSticky,
                 false
             )
-            repeatable = ta.getBoolean(R.styleable.Keyboard_Key_isRepeatable, false)
+            isRepeatable = ta.getBoolean(R.styleable.Keyboard_Key_isRepeatable, false)
             iconPreview = ta.getDrawable(R.styleable.Keyboard_Key_iconPreview)
             iconPreview?.apply {
                 setBounds(0, 0, intrinsicWidth, intrinsicHeight)

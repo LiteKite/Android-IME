@@ -28,9 +28,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
 import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
+import com.litekite.ime.base.CallbackProvider
 import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.util.StringUtil.isPunctuation
 import kotlin.math.max
@@ -55,12 +57,16 @@ class KeyboardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr), CallbackProvider<KeyboardView.KeyboardActionListener> {
 
     companion object {
         private val TAG: String = KeyboardView::class.java.simpleName
+
         private const val SCRIM_ALPHA = 242 // 95% opacity.
         private const val MAX_ALPHA = 255
+
+        private const val REPEAT_KEY_DELAY = 50L // ~20 keys per second
+        private const val REPEAT_KEY_START_DELAY = 400L
     }
 
     private var scrimColor: Int
@@ -102,7 +108,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     /** Touch properties  */
-    private var currentKeyIndex: Int = Keyboard.NOT_A_KEY
+    private var currentKeyIndex = Keyboard.NOT_A_KEY
     private var abortKey = false
 
     /** Variables for dealing with multiple pointers */
@@ -115,6 +121,18 @@ class KeyboardView @JvmOverloads constructor(
             performLongClick()
         }
     }
+
+    private val performRepeatKey = object : Runnable {
+        override fun run() {
+            sendKeyEvent()
+            postDelayed(this, REPEAT_KEY_DELAY)
+        }
+    }
+
+    override val callbacks: ArrayList<KeyboardActionListener> = ArrayList()
+
+    /** The accessibility manager for accessibility support  */
+    private var accessibilityManager: AccessibilityManager? = null
 
     init {
         val ta = context.obtainStyledAttributes(
@@ -182,6 +200,8 @@ class KeyboardView @JvmOverloads constructor(
             )
             setKeyboard(keyboard)
         }
+        accessibilityManager =
+            context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
     }
 
     /**
@@ -191,7 +211,7 @@ class KeyboardView @JvmOverloads constructor(
      * @param keyboard the keyboard to display in this view
      */
     fun setKeyboard(keyboard: Keyboard) {
-        removeCallbacks(performLongPress)
+        removeCallbacks()
         this.keyboard = keyboard
         abortKey = true // Perform touch only until the next ACTION_DOWN
         keyboardChanged = true
@@ -387,11 +407,39 @@ class KeyboardView @JvmOverloads constructor(
         postInvalidate(left, top, right, bottom)
     }
 
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        // Close the touch keyboard when the user scrolls.
+        if (event.actionMasked == MotionEvent.ACTION_SCROLL) {
+            callbacks.forEach { it.onStopInput() }
+            return true
+        }
+        return false
+    }
+
+    override fun onHoverEvent(event: MotionEvent): Boolean {
+        if (accessibilityManager?.isTouchExplorationEnabled == true && event.pointerCount == 1) {
+            when (event.action) {
+                MotionEvent.ACTION_HOVER_ENTER -> {
+                    event.action = MotionEvent.ACTION_DOWN
+                }
+                MotionEvent.ACTION_HOVER_MOVE -> {
+                    event.action = MotionEvent.ACTION_MOVE
+                }
+                MotionEvent.ACTION_HOVER_EXIT -> {
+                    event.action = MotionEvent.ACTION_UP
+                }
+            }
+            return onTouchEvent(event)
+        }
+        return true
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // TODO: 08-07-2021 WIP fix vertical gap, space bar key, edgeFlags, change key icons
         // TODO: 08-07-2021 WIP Themes and Styles for Day/Night Mode
         // TODO: 12-07-2021 Add Key Preview popup window and popup characters window
         // TODO: 12-07-2021 Screen size support for all DPIs and flexible key sizes
+        // TODO: 13-07-2021 Draw touch points in debug mode and fix shift keys
         // Convert multi-pointer up/down events to single up/down events to
         // deal with the typical multi-pointer behavior of two-thumb typing
         val pointerCount = event.pointerCount
@@ -468,11 +516,15 @@ class KeyboardView @JvmOverloads constructor(
                 val currentKey = keys[keyIndex]
                 currentKey.onPressed()
                 currentKeyIndex = keyIndex
+                if (currentKey.isRepeatable) {
+                    sendKeyEvent()
+                    postDelayed(performRepeatKey, REPEAT_KEY_START_DELAY)
+                }
                 postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 invalidateKey(currentKeyIndex)
             }
             MotionEvent.ACTION_MOVE -> {
-                removeCallbacks(performLongPress)
+                removeCallbacks()
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
@@ -486,11 +538,15 @@ class KeyboardView @JvmOverloads constructor(
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL -> {
                 abortKey = true
-                removeCallbacks(performLongPress)
+                removeCallbacks()
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
                 val currentKey = keys[currentKeyIndex]
+                // If we're not on a repeating key (which sends on a DOWN event)
+                if (!currentKey.isRepeatable) {
+                    sendKeyEvent()
+                }
                 if (currentKey.isPressed) {
                     val isInside = currentKey.isInside(touchX, touchY)
                     currentKey.onReleased(isInside)
@@ -504,5 +560,47 @@ class KeyboardView @JvmOverloads constructor(
     override fun performClick(): Boolean {
         ImeApp.printLog(TAG, "performClick")
         return super.performClick()
+    }
+
+    private fun sendKeyEvent() {
+        if (currentKeyIndex == Keyboard.NOT_A_KEY) {
+            return
+        }
+        val keyboard = this.keyboard ?: return
+        val key = keyboard.keys[currentKeyIndex]
+        callbacks.forEach { it.onKey(key.codes[0]) }
+    }
+
+    private fun removeCallbacks() {
+        removeCallbacks(performLongPress)
+        removeCallbacks(performRepeatKey)
+    }
+
+    private fun close() {
+        removeCallbacks()
+        buffer = null
+        canvas = null
+    }
+
+    override fun onDetachedFromWindow() {
+        close()
+        super.onDetachedFromWindow()
+    }
+
+    /**
+     * Listener for virtual keyboard events.
+     */
+    interface KeyboardActionListener {
+
+        /**
+         * Send a key press to the listener.
+         * @param primaryCode this is the key that was pressed
+         */
+        fun onKey(primaryCode: Int)
+
+        /**
+         * Called when we want to stop keyboard input.
+         */
+        fun onStopInput()
     }
 }

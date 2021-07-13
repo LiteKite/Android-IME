@@ -219,6 +219,32 @@ class KeyboardView @JvmOverloads constructor(
         invalidateAllKeys()
     }
 
+    /**
+     * Sets the state of the shift key of the keyboard, if any.
+     * @param shifted whether or not to enable the state of the shift key
+     * @return true if the shift key state changed, false if there was no change
+     * @see isShifted
+     */
+    fun setShifted(shifted: Boolean): Boolean {
+        val keyboard = this.keyboard ?: return false
+        if (keyboard.setShifted(shifted)) {
+            // The whole keyboard probably needs to be redrawn
+            invalidateAllKeys()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Returns the state of the shift key of the keyboard, if any.
+     * @return true if the shift is in a pressed state, false otherwise. If there is
+     * no shift key on the keyboard or there is no keyboard attached, it returns false.
+     * @see KeyboardView.setShifted
+     */
+    fun isShifted(): Boolean {
+        return keyboard?.isShifted ?: return false
+    }
+
     private fun getLocale() = resources.configuration.locales[0]
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

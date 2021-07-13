@@ -154,7 +154,7 @@ class Keyboard(context: Context, layoutRes: Int) {
     /**
      * Is the Keyboard in the shifted state
      */
-    private var isShifted = false
+    internal var isShifted = false
 
     /**
      * Key instance for the shift key, if present
@@ -583,7 +583,11 @@ class Keyboard(context: Context, layoutRes: Int) {
         }
 
         fun adjustCase(locale: Locale): CharSequence {
-            if (isShifted && label.length < 3 && Character.isLowerCase(label[0])) {
+            if (isShifted &&
+                label.isNotEmpty() &&
+                label.length < 3 &&
+                Character.isLowerCase(label[0])
+            ) {
                 label = label.toString().uppercase(locale)
             }
             return label

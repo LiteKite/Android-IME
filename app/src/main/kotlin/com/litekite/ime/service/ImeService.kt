@@ -24,6 +24,7 @@ import com.litekite.ime.app.ImeApp
 import com.litekite.ime.databinding.LayoutKeyboardViewBinding
 import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.widget.Keyboard
+import com.litekite.ime.widget.KeyboardView
 import java.util.Locale
 
 /**
@@ -34,6 +35,9 @@ import java.util.Locale
 class ImeService : InputMethodService() {
 
     companion object {
+
+        private val TAG: String = ImeService::class.java.simpleName
+
         const val DEFAULT_LOCALE = "en"
     }
 
@@ -41,6 +45,24 @@ class ImeService : InputMethodService() {
     private lateinit var symbolKeyboard: Keyboard
 
     private var binding: LayoutKeyboardViewBinding? = null
+
+    private val keyboardActionListener = object : KeyboardView.KeyboardActionListener {
+
+        override fun onKey(primaryCode: Int) {
+            ImeApp.printLog(TAG, "onKey: $primaryCode")
+            val binding = this@ImeService.binding ?: return
+            when (primaryCode) {
+                Keyboard.KEYCODE_SHIFT -> {
+                    // Toggle Capitalization
+                    binding.vKeyboard.setShifted(!binding.vKeyboard.isShifted())
+                }
+            }
+        }
+
+        override fun onStopInput() {
+            requestHideSelf(0)
+        }
+    }
 
     init {
         ImeApp.printLog(ImeApp.TAG, "init:")
@@ -73,15 +95,19 @@ class ImeService : InputMethodService() {
         return binding!!.root
     }
 
-    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
+    override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
         ImeApp.printLog(ImeApp.TAG, "onStartInputView:")
-        binding?.vKeyboard?.setKeyboard(qwertyKeyboard)
+        val binding = this.binding ?: return
+        binding.vKeyboard.setKeyboard(qwertyKeyboard)
+        binding.vKeyboard.addCallback(keyboardActionListener)
+        binding.vKeyboard.setShifted(info.initialCapsMode != 0)
     }
 
     override fun onEvaluateFullscreenMode(): Boolean = false
 
     override fun onDestroy() {
+        binding?.vKeyboard?.removeCallback(keyboardActionListener)
         binding = null
         super.onDestroy()
         ImeApp.printLog(ImeApp.TAG, "onDestroy:")

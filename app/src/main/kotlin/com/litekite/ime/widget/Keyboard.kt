@@ -576,14 +576,13 @@ class Keyboard(context: Context, layoutRes: Int) {
         }
 
         fun adjustCase(locale: Locale): CharSequence {
-            label = if (isShifted &&
+            var label = this.label
+            if (isShifted &&
                 label.isNotEmpty() &&
                 label.length < 3 &&
                 Character.isLowerCase(label[0])
             ) {
-                label.toString().uppercase(locale)
-            } else {
-                label.toString().lowercase(locale)
+                label = label.toString().uppercase(locale)
             }
             return label
         }

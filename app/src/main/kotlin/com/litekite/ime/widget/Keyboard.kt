@@ -161,11 +161,6 @@ class Keyboard(context: Context, layoutRes: Int) {
      */
     private val shiftKeys = arrayOf<Keyboard.Key?>(null, null)
 
-    /**
-     * Key index for the shift key, if present
-     */
-    private val shiftKeyIndices = intArrayOf(-1, -1)
-
     /** List of modifier keys such as Shift & Alt, if any */
     private val modifierKeys: ArrayList<Key> = ArrayList()
 
@@ -217,7 +212,6 @@ class Keyboard(context: Context, layoutRes: Int) {
                                 for (i in shiftKeys.indices) {
                                     if (shiftKeys[i] == null) {
                                         shiftKeys[i] = currentKey
-                                        shiftKeyIndices[i] = keys.size - 1
                                         break
                                     }
                                 }
@@ -304,8 +298,6 @@ class Keyboard(context: Context, layoutRes: Int) {
         }
         return false
     }
-
-    fun getShiftKeyIndex(): Int = shiftKeyIndices[0]
 
     /**
      * Container for keys in the Keyboard. All keys in a row are at the same Y-coordinate.

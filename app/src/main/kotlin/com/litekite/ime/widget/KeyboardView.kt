@@ -542,12 +542,12 @@ class KeyboardView @JvmOverloads constructor(
                 val currentKey = keys[keyIndex]
                 currentKey.onPressed()
                 currentKeyIndex = keyIndex
+                invalidateKey(currentKeyIndex)
+                postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 if (currentKey.isRepeatable) {
                     sendKeyEvent()
                     postDelayed(performRepeatKey, REPEAT_KEY_START_DELAY)
                 }
-                postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
-                invalidateKey(currentKeyIndex)
             }
             MotionEvent.ACTION_MOVE -> {
                 removeCallbacks()
@@ -569,14 +569,14 @@ class KeyboardView @JvmOverloads constructor(
                     return true
                 }
                 val currentKey = keys[currentKeyIndex]
-                // If we're not on a repeating key (which sends on a DOWN event)
-                if (!currentKey.isRepeatable) {
-                    sendKeyEvent()
-                }
                 if (currentKey.isPressed) {
                     val isInside = currentKey.isInside(touchX, touchY)
                     currentKey.onReleased(isInside)
                     invalidateKey(currentKeyIndex)
+                }
+                // If we're not on a repeating key (which sends on a DOWN event)
+                if (!currentKey.isRepeatable) {
+                    sendKeyEvent()
                 }
             }
         }

@@ -26,7 +26,9 @@ interface CallbackProvider<T> {
     val callbacks: ArrayList<T>
 
     fun addCallback(cb: T) {
-        callbacks.add(cb)
+        if (!callbacks.contains(cb)) {
+            callbacks.add(cb)
+        }
     }
 
     fun removeCallback(cb: T) {

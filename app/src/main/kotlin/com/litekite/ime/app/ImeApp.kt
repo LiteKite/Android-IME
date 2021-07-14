@@ -36,7 +36,9 @@ class ImeApp : Application() {
          * @param message Type of a Log Message.
          */
         fun printLog(tag: String, message: String) {
-            Log.d(tag, message)
+            if (Log.isLoggable(tag, Log.DEBUG)) {
+                Log.d(tag, message)
+            }
         }
     }
 

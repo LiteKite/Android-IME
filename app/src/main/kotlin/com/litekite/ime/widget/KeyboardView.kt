@@ -98,7 +98,7 @@ class KeyboardView @JvmOverloads constructor(
     private var buffer: Bitmap? = null
 
     /** The canvas for the above mutable keyboard bitmap  */
-    private var canvas: Canvas? = null
+    private var canvas: Canvas? = Canvas()
 
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -283,13 +283,13 @@ class KeyboardView @JvmOverloads constructor(
     private fun onBufferDraw(invalidatedKey: Keyboard.Key?) {
         if (buffer == null || keyboardChanged) {
             if (buffer == null || keyboardChanged &&
-                (buffer!!.width != width || buffer!!.height != height)
+                (buffer?.width != width || buffer?.height != height)
             ) {
                 // Make sure our bitmap is at least 1x1
                 val width = max(1, width)
                 val height = max(1, height)
                 buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                canvas = Canvas(buffer!!)
+                canvas?.setBitmap(buffer)
             }
             keyboardChanged = false
         }
@@ -462,11 +462,6 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // TODO: 08-07-2021 WIP fix vertical gap, space bar key, edgeFlags, change key icons
-        // TODO: 08-07-2021 WIP Themes and Styles for Day/Night Mode
-        // TODO: 12-07-2021 Add Key Preview popup window and popup characters window
-        // TODO: 12-07-2021 Screen size support for all DPIs and flexible key sizes
-        // TODO: 13-07-2021 Draw touch points in debug mode and fix shift keys
         // Convert multi-pointer up/down events to single up/down events to
         // deal with the typical multi-pointer behavior of two-thumb typing
         val pointerCount = event.pointerCount

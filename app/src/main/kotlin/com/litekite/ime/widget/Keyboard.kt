@@ -78,13 +78,17 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val EDGE_TOP = 0x04
         const val EDGE_BOTTOM = 0x08
 
-        /** Modifier keys */
+        /** Key codes */
+        const val KEYCODE_ENTER = '\n'.code
         const val KEYCODE_SHIFT = -1
         const val KEYCODE_MODE_CHANGE = -2
-        const val KEYCODE_CANCEL = -3
         const val KEYCODE_DONE = -4
         const val KEYCODE_DELETE = -5
         const val KEYCODE_ALT = -6
+        const val KEYCODE_CYCLE_CHAR = -7
+        const val KEYCODE_MAIN_KEYBOARD = -8
+        const val KEYCODE_NUM_KEYBOARD = -9
+        const val KEYCODE_ALPHA_KEYBOARD = -10
         const val KEYCODE_CLOSE_KEYBOARD = -99
 
         const val NOT_A_KEY = -1

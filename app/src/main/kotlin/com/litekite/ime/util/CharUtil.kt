@@ -15,16 +15,24 @@
  */
 package com.litekite.ime.util
 
-import android.content.Context
-import androidx.appcompat.view.ContextThemeWrapper
-import com.litekite.ime.R
+import java.util.Locale
 
 /**
  * @author Vignesh S
- * @version 1.0, 05/07/2021
+ * @version 1.0, 14/07/2021
  * @since 1.0
  */
-object ContextUtil {
+object CharUtil {
 
-    fun Context.themeContext(): Context = ContextThemeWrapper(this, R.style.Theme_AndroidIME)
+    /**
+     * Cycle through alternate characters of the given character. Return the same character if
+     * there is no alternate.
+     */
+    fun Char.cycleCharacter(locale: Locale): Char {
+        return if (Character.isUpperCase(this)) {
+            this.lowercase(locale)[0]
+        } else {
+            this.uppercase(locale)[0]
+        }
+    }
 }

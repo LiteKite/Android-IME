@@ -102,7 +102,7 @@
             app:popupCharacters="@string/alternates_for_l"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:codes="@integer/keycode_return"
+            app:codes="@integer/keycode_enter"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_return" />
     </Row>

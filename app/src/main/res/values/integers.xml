@@ -15,13 +15,12 @@
    limitations under the License.
 -->
 <resources>
+
     <integer name="keycode_shift">-1</integer>
     <integer name="keycode_mode_change">-2</integer>
-    <integer name="keycode_cancel">-3</integer>
-    <integer name="keycode_done">-4</integer>
     <integer name="keycode_delete">-5</integer>
-    <integer name="keycode_alt">-6</integer>
     <integer name="keycode_space">32</integer>
-    <integer name="keycode_return">10</integer>
+    <integer name="keycode_enter">10</integer>
     <integer name="keycode_close_keyboard">-99</integer>
+
 </resources>

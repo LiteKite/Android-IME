@@ -24,47 +24,47 @@
             app:keyEdgeFlags="left"
             app:keyLabel="q" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="w" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="e"
             app:popupCharacters="@string/alternates_for_e"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="r" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="t" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="y"
             app:popupCharacters="@string/alternates_for_y"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="u"
             app:popupCharacters="@string/alternates_for_u"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="i"
             app:popupCharacters="@string/alternates_for_i"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="o"
             app:popupCharacters="@string/alternates_for_o"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="p" />
         <Key
             app:codes="@integer/keycode_delete"
             app:isRepeatable="true"
             app:keyEdgeFlags="right"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyIcon="@drawable/ic_keyboard_backspace" />
     </Row>
 
@@ -75,36 +75,36 @@
             app:popupCharacters="@string/alternates_for_a"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="s"
             app:popupCharacters="@string/alternates_for_s"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="d" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="f" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="g" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="h" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="j" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="k" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="l"
             app:popupCharacters="@string/alternates_for_l"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
             app:codes="@integer/keycode_enter"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyIcon="@drawable/ic_keyboard_return" />
     </Row>
 
@@ -113,44 +113,44 @@
             app:keyEdgeFlags="left"
             app:keyLabel="\@" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="z"
             app:popupCharacters="@string/alternates_for_z"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="x" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="c"
             app:popupCharacters="@string/alternates_for_c"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="v" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="b" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="n"
             app:popupCharacters="@string/alternates_for_n"
             app:popupKeyboard="@xml/keyboard_popup" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="m" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="!" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="\?" />
         <Key
             app:codes="@integer/keycode_shift"
             app:isModifier="true"
             app:isSticky="true"
             app:keyEdgeFlags="right"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyIcon="@drawable/ic_keyboard_shift" />
     </Row>
 
@@ -160,26 +160,26 @@
             app:keyEdgeFlags="left"
             app:keyIcon="@drawable/ic_keyboard_close" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="_" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="-" />
         <Key
             app:codes="@integer/keycode_space"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-            app:keyIcon="@drawable/ic_keyboard_space_bar"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
+            app:keyLabel="English"
             app:keyWidth="@dimen/keyboard_key_space_bar_width" />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="," />
         <Key
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="." />
         <Key
             app:codes="@integer/keycode_mode_change"
             app:keyEdgeFlags="right"
-            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
+            app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyIcon="@drawable/ic_keyboard_symbol" />
     </Row>
 

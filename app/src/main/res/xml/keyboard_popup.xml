@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 <Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
-    app:keyHeight="@dimen/keyboard_key_height"
-    app:keyWidth="@dimen/keyboard_key_width"
+    app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
+    app:keyHeight="@dimen/keyboard_popup_key_size"
+    app:keyWidth="@dimen/keyboard_popup_key_size"
     app:keyVerticalGap="@dimen/keyboard_key_vertical_gap" />

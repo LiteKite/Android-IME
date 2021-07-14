@@ -247,7 +247,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 }
             }
         }
-        keyboardHeight = y + defaultKeyVerticalGap
+        keyboardHeight = y - defaultKeyVerticalGap
     }
 
     private fun parseKeyboardAttributes(res: Resources, parser: XmlResourceParser) {

@@ -23,18 +23,10 @@
     <com.litekite.ime.widget.KeyboardView
         android:id="@+id/v_keyboard"
         style="@style/KeyboardStyle"
+        android:padding="@dimen/keyboard_view_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:focusable="true" />
-
-    <com.litekite.ime.widget.KeyboardView
-        android:id="@+id/v_popup_keyboard"
-        style="@style/KeyboardStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:layout_marginTop="@dimen/keyboard_view_popup_offset"
-        android:visibility="gone" />
 
 </FrameLayout>

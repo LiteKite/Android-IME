@@ -19,22 +19,16 @@
     <dimen name="keyboard_key_size">72dp</dimen>
     <dimen name="keyboard_half_key_size">36dp</dimen>
 
-    <dimen name="keyboard_key_width">68dp</dimen>
-    <dimen name="keyboard_key_height">52dp</dimen>
+    <dimen name="keyboard_popup_key_size">68dp</dimen>
 
-    <dimen name="keyboard_key_vertical_gap">2dp</dimen>
-    <dimen name="keyboard_key_horizontal_tiny_gap">2dp</dimen>
+    <dimen name="keyboard_key_vertical_gap">3dp</dimen>
+    <dimen name="keyboard_key_horizontal_gap">3dp</dimen>
 
-    <dimen name="keyboard_key_space_bar_width">368dp</dimen>
-    <dimen name="keyboard_space_bar_height">16dp</dimen>
-    <dimen name="keyboard_key_space_bar_visual_width">248dp</dimen>
-    <dimen name="keyboard_space_bar_radius">3dp</dimen>
-    <dimen name="keyboard_space_bar_margin_top">20dp</dimen>
-    <dimen name="keyboard_space_bar_margin_bottom">20dp</dimen>
-    <dimen name="keyboard_space_bar_pressed_margin">50dp</dimen>
-    <dimen name="keyboard_key_space_bar_visual_horizontal_padding">4dp</dimen>
+    <dimen name="keyboard_key_space_bar_width">372dp</dimen>
 
-    <dimen name="keyboard_view_popup_offset">24dp</dimen>
+    <dimen name="keyboard_key_icon_mode_size">68dp</dimen>
+
+    <dimen name="keyboard_view_padding">3dp</dimen>
     <dimen name="keyboard_view_key_text_size">26dp</dimen>
     <dimen name="keyboard_view_key_punctuation_height">32dp</dimen>
 

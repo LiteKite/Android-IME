@@ -59,7 +59,6 @@
 
     <Row>
         <Key
-            app:keyEdgeFlags="left"
             app:keyHorizontalGap="@dimen/keyboard_half_key_size"
             app:keyLabel="\#" />
         <Key
@@ -88,7 +87,6 @@
             app:keyLabel="+" />
         <Key
             app:codes="@integer/keycode_return"
-            app:keyEdgeFlags="right"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_tiny_gap"
             app:keyIcon="@drawable/ic_keyboard_return" />
     </Row>

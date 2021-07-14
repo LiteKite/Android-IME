@@ -531,13 +531,12 @@ class KeyboardView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 abortKey = false
-                val keyIndex = keyboard.getKeyIndex(touchX, touchY)
-                if (keyIndex == Keyboard.NOT_A_KEY) {
+                currentKeyIndex = keyboard.getKeyIndex(touchX, touchY)
+                if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
-                val currentKey = keys[keyIndex]
+                val currentKey = keys[currentKeyIndex]
                 currentKey.onPressed()
-                currentKeyIndex = keyIndex
                 invalidateKey(currentKeyIndex)
                 postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 if (currentKey.isRepeatable) {

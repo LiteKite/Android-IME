@@ -89,7 +89,7 @@
         <Key
             app:codes="@integer/keycode_enter"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
-            app:keyIcon="@drawable/ic_keyboard_return" />
+            app:keyIcon="@drawable/ic_keyboard_enter" />
     </Row>
 
     <Row>

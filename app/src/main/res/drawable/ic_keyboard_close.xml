@@ -17,10 +17,10 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:tint="#FFFFFF"
-    android:viewportHeight="24"
-    android:viewportWidth="24">
+    android:viewportHeight="16"
+    android:viewportWidth="16">
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M7,10l5,5 5,-5z" />
+        android:fillColor="@color/white"
+        android:pathData="M3.204,5h9.592L8,10.481 3.204,5zM2.451,5.659 L7.247,11.139a1,1 0,0 0,1.506 0l4.796,-5.48c0.566,-0.647 0.106,-1.659 -0.753,-1.659L3.204,4a1,1 0,0 0,-0.753 1.659z"
+        android:strokeColor="@color/white" />
 </vector>

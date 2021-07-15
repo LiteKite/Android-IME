@@ -14,12 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportHeight="24"
-    android:viewportWidth="24">
-    <path
-        android:fillColor="@color/white"
-        android:pathData="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
-</vector>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <item android:color="@color/teal_200" android:state_checked="true" />
+    <item android:color="@color/white" />
+</selector>

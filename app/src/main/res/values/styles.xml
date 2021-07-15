@@ -24,7 +24,7 @@
         <item name="labelTextSize">@dimen/keyboard_view_key_text_size</item>
         <item name="keyTextColorPrimary">?attr/colorPrimary</item>
         <item name="keyTextColorSecondary">?attr/colorSecondary</item>
-        <item name="keyBackground">@drawable/bg_keyboard_view_key</item>
+        <item name="keyBackground">@drawable/bg_keyboard_key</item>
     </style>
 
 </resources>

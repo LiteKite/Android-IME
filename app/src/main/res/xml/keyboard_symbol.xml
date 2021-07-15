@@ -15,9 +15,11 @@
    limitations under the License.
 -->
 <Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:keyHeight="@dimen/keyboard_key_size"
     app:keyVerticalGap="@dimen/keyboard_key_vertical_gap"
-    app:keyWidth="@dimen/keyboard_key_size">
+    app:keyWidth="@dimen/keyboard_key_size"
+    tools:ignore="UnusedResources">
 
     <Row app:rowEdgeFlags="top">
         <Key
@@ -55,7 +57,7 @@
             app:isRepeatable="true"
             app:keyEdgeFlags="right"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
-            app:keyIcon="@drawable/ic_keyboard_backspace" />
+            app:keyIcon="@drawable/ic_keyboard_key_backspace" />
     </Row>
 
     <Row>
@@ -89,7 +91,7 @@
         <Key
             app:codes="@integer/keycode_enter"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
-            app:keyIcon="@drawable/ic_keyboard_enter" />
+            app:keyIcon="@drawable/ic_keyboard_key_enter" />
     </Row>
 
     <Row>
@@ -133,7 +135,7 @@
         <Key
             app:codes="@integer/keycode_close_keyboard"
             app:keyEdgeFlags="left"
-            app:keyIcon="@drawable/ic_keyboard_close" />
+            app:keyIcon="@drawable/ic_keyboard_key_close" />
         <Key
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
             app:keyLabel="~" />
@@ -155,7 +157,7 @@
             app:codes="@integer/keycode_mode_change"
             app:keyEdgeFlags="right"
             app:keyHorizontalGap="@dimen/keyboard_key_horizontal_gap"
-            app:keyIcon="@drawable/ic_keyboard_qwerty" />
+            app:keyIcon="@drawable/ic_keyboard_key_qwerty" />
     </Row>
 
 </Keyboard>

@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
     <integer name="keycode_shift">-1</integer>
     <integer name="keycode_mode_change">-2</integer>

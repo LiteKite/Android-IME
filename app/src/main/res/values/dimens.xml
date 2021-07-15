@@ -14,12 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
     <dimen name="keyboard_key_size">72dp</dimen>
     <dimen name="keyboard_half_key_size">36dp</dimen>
-
-    <dimen name="keyboard_popup_key_size">68dp</dimen>
 
     <dimen name="keyboard_key_vertical_gap">3dp</dimen>
     <dimen name="keyboard_key_horizontal_gap">3dp</dimen>

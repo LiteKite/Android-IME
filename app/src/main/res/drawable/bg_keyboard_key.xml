@@ -18,13 +18,13 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/keyboard_half_key_size" />
-            <solid android:color="@color/purple_200" />
+            <solid android:color="?colorControlHighlight" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/keyboard_half_key_size" />
-            <solid android:color="@color/black" />
+            <solid android:color="?colorControlNormal" />
         </shape>
     </item>
 </selector>

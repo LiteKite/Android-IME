@@ -22,8 +22,8 @@
         <item name="textStyle">normal</item>
         <item name="keyTextSize">@dimen/keyboard_view_key_text_size</item>
         <item name="labelTextSize">@dimen/keyboard_view_key_text_size</item>
-        <item name="keyTextColorPrimary">?attr/colorPrimary</item>
-        <item name="keyTextColorSecondary">?attr/colorSecondary</item>
+        <item name="keyTextColorPrimary">?android:textColorPrimary</item>
+        <item name="keyTextColorSecondary">?android:textColorSecondary</item>
         <item name="keyBackground">@drawable/bg_keyboard_key</item>
     </style>
 

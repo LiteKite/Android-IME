@@ -15,11 +15,14 @@
    limitations under the License.
 -->
 <resources>
-    <color name="white">#FFFFFFFF</color>
-    <color name="black">#FF000000</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_700">#FF3700B3</color>
+
+    <color name="black">#ff000000</color>
+    <color name="black_700">#1f2124</color>
+    <color name="white">#ffffffff</color>
+    <color name="gray_200">#f8f9fa</color>
+    <color name="green_200">#abff4f</color>
+    <color name="green_400">#0ead69</color>
+    <color name="green_700">#08673f</color>
     <color name="keyboard_scrim_color">@color/black</color>
+
 </resources>

@@ -26,7 +26,7 @@
 
     <dimen name="keyboard_key_icon_mode_size">68dp</dimen>
 
-    <dimen name="keyboard_view_padding">3dp</dimen>
+    <dimen name="keyboard_view_padding">5dp</dimen>
     <dimen name="keyboard_view_key_text_size">26dp</dimen>
     <dimen name="keyboard_view_key_punctuation_height">32dp</dimen>
 

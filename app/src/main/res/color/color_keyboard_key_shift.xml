@@ -15,6 +15,6 @@
    limitations under the License.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
-    <item android:color="@color/teal_200" android:state_checked="true" />
-    <item android:color="@color/white" />
+    <item android:color="?colorControlActivated" android:state_checked="true" />
+    <item android:color="?colorButtonNormal" />
 </selector>

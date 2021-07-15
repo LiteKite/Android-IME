@@ -53,12 +53,12 @@ class ImeService : InputMethodService() {
     private val binding: LayoutKeyboardViewBinding get() = _binding!!
 
     init {
-        ImeApp.printLog(ImeApp.TAG, "init:")
+        ImeApp.printLog(TAG, "init:")
     }
 
     override fun onCreate() {
         super.onCreate()
-        ImeApp.printLog(ImeApp.TAG, "onCreate:")
+        ImeApp.printLog(TAG, "onCreate:")
         qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
         symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
     }
@@ -78,14 +78,14 @@ class ImeService : InputMethodService() {
     }
 
     override fun onCreateInputView(): View {
-        ImeApp.printLog(ImeApp.TAG, "onCreateInputView:")
+        ImeApp.printLog(TAG, "onCreateInputView:")
         _binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(themeContext()))
         return binding.root
     }
 
     override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
-        ImeApp.printLog(ImeApp.TAG, "onStartInputView:")
+        ImeApp.printLog(TAG, "onStartInputView:")
         _editorInfo = info
         binding.vKeyboard.setKeyboard(qwertyKeyboard)
         binding.vKeyboard.addCallback(keyboardActionListener)
@@ -95,10 +95,10 @@ class ImeService : InputMethodService() {
     override fun onEvaluateFullscreenMode(): Boolean = false
 
     override fun onDestroy() {
+        ImeApp.printLog(TAG, "onDestroy:")
         binding.vKeyboard.removeCallback(keyboardActionListener)
         _binding = null
         super.onDestroy()
-        ImeApp.printLog(ImeApp.TAG, "onDestroy:")
     }
 
     private val keyboardActionListener = object : KeyboardView.KeyboardActionListener {

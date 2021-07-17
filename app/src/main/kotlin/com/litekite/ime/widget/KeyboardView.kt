@@ -419,6 +419,8 @@ class KeyboardView @JvmOverloads constructor(
      */
     private fun invalidateKey(keyIndex: Int) {
         val keyboard = this.keyboard ?: return
+        // Ignore drawing single key if all the keys are in drawing pipeline.
+        if (drawPending) return
         val keys = keyboard.keys
         if (keyIndex < 0 || keyIndex >= keys.size) {
             return

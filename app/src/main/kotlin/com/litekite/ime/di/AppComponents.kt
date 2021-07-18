@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.litekite.ime.util
+package com.litekite.ime.di
 
 import android.content.Context
-import androidx.appcompat.view.ContextThemeWrapper
-import com.litekite.ime.R
+import com.litekite.ime.config.ConfigController
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
- * @version 1.0, 05/07/2021
+ * @version 1.0, 19/07/2021
  * @since 1.0
  */
-object ContextUtil {
+@Module
+@InstallIn(SingletonComponent::class)
+object AppComponents {
 
-    fun Context.themeContext(): Context = ContextThemeWrapper(this, R.style.Theme_AndroidIME)
+    @Provides
+    @Singleton
+    fun provideConfigController(@ApplicationContext context: Context): ConfigController =
+        ConfigController(context)
 }

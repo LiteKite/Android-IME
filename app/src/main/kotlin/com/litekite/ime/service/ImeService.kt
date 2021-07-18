@@ -20,20 +20,25 @@ import android.os.LocaleList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import com.google.android.material.color.MaterialColors
+import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
+import com.litekite.ime.config.ConfigController
 import com.litekite.ime.databinding.LayoutKeyboardViewBinding
 import com.litekite.ime.util.CharUtil.cycleCharacter
-import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.widget.Keyboard
 import com.litekite.ime.widget.KeyboardView
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+import javax.inject.Inject
 
 /**
  * @author Vignesh S
  * @version 1.0, 01/06/2021
  * @since 1.0
  */
-class ImeService : InputMethodService() {
+@AndroidEntryPoint
+class ImeService : InputMethodService(), ConfigController.Callback {
 
     companion object {
 
@@ -42,6 +47,9 @@ class ImeService : InputMethodService() {
         private const val DEFAULT_LOCALE = "en"
         private const val IME_ACTION_CUSTOM_LABEL = EditorInfo.IME_MASK_ACTION + 1
     }
+
+    @Inject
+    lateinit var configController: ConfigController
 
     private var _editorInfo: EditorInfo? = null
     private val editorInfo: EditorInfo get() = _editorInfo!!
@@ -57,10 +65,25 @@ class ImeService : InputMethodService() {
     }
 
     override fun onCreate() {
+        setTheme(R.style.Theme_AndroidIME)
         super.onCreate()
         ImeApp.printLog(TAG, "onCreate:")
         qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
         symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
+        // Setting configuration callback
+        configController.addCallback(this)
+    }
+
+    override fun onThemeChanged() {
+        super.onThemeChanged()
+        ImeApp.printLog(TAG, "onThemeChanged:")
+        // Applying theme to resolve attributes of the current theme
+        theme.applyStyle(R.style.Theme_AndroidIME, true)
+        // Changing nav bar background
+        window.window?.navigationBarColor = MaterialColors.getColor(
+            binding.vKeyboard,
+            android.R.attr.navigationBarColor
+        )
     }
 
     private fun createKeyboard(layoutXml: String): Keyboard {
@@ -79,7 +102,7 @@ class ImeService : InputMethodService() {
 
     override fun onCreateInputView(): View {
         ImeApp.printLog(TAG, "onCreateInputView:")
-        _binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(themeContext()))
+        _binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(this))
         return binding.root
     }
 
@@ -96,6 +119,8 @@ class ImeService : InputMethodService() {
 
     override fun onDestroy() {
         ImeApp.printLog(TAG, "onDestroy:")
+        // Removing callback
+        configController.removeCallback(this)
         binding.vKeyboard.removeCallback(keyboardActionListener)
         _binding = null
         super.onDestroy()

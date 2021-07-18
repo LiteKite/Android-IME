@@ -16,13 +16,18 @@
 package com.litekite.ime.app
 
 import android.app.Application
+import android.content.res.Configuration
 import android.util.Log
+import com.litekite.ime.config.ConfigController
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 /**
  * @author Vignesh S
  * @version 1.0, 01/06/2021
  * @since 1.0
  */
+@HiltAndroidApp
 class ImeApp : Application() {
 
     companion object {
@@ -42,9 +47,17 @@ class ImeApp : Application() {
         }
     }
 
+    @Inject
+    lateinit var configController: ConfigController
+
     override fun onCreate() {
         super.onCreate()
         printLog(TAG, "onCreate:")
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        configController.onConfigChanged(newConfig)
+        super.onConfigurationChanged(newConfig)
     }
 
     override fun onTerminate() {

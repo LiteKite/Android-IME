@@ -33,7 +33,6 @@ import androidx.core.content.ContextCompat
 import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
 import com.litekite.ime.base.CallbackProvider
-import com.litekite.ime.util.ContextUtil.themeContext
 import com.litekite.ime.util.StringUtil.isPunctuation
 import java.util.Locale
 import kotlin.math.max
@@ -192,7 +191,7 @@ class KeyboardView @JvmOverloads constructor(
         }
         if (isInEditMode) {
             val keyboard = Keyboard(
-                context.themeContext(),
+                context,
                 resources.getIdentifier(
                     Keyboard.LAYOUT_KEYBOARD_QWERTY,
                     Keyboard.DEF_TYPE,

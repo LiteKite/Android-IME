@@ -17,15 +17,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal|bottom">
+    android:layout_gravity="center_horizontal|bottom"
+    android:paddingTop="@dimen/keyboard_view_root_padding_top">
 
     <com.litekite.ime.widget.KeyboardView
         android:id="@+id/v_keyboard"
         style="@style/KeyboardStyle"
-        android:padding="@dimen/keyboard_view_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:focusable="true" />
+        android:focusable="true"
+        android:padding="@dimen/keyboard_view_padding" />
 
 </FrameLayout>

@@ -68,8 +68,7 @@ class ImeService : InputMethodService(), ConfigController.Callback {
         setTheme(R.style.Theme_AndroidIME)
         super.onCreate()
         ImeApp.printLog(TAG, "onCreate:")
-        qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
-        symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
+        parseKeyboardLayoutFromXml()
         // Setting configuration callback
         configController.addCallback(this)
     }
@@ -84,6 +83,14 @@ class ImeService : InputMethodService(), ConfigController.Callback {
             binding.vKeyboard,
             android.R.attr.navigationBarColor
         )
+        // Recreate all the keyboard layouts to reflect theme change
+        parseKeyboardLayoutFromXml()
+        binding.vKeyboard.setKeyboard(qwertyKeyboard)
+    }
+
+    private fun parseKeyboardLayoutFromXml() {
+        qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
+        symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
     }
 
     private fun createKeyboard(layoutXml: String): Keyboard {

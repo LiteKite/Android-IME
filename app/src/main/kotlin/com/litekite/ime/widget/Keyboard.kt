@@ -208,7 +208,14 @@ class Keyboard(context: Context, layoutRes: Int) {
                     TAG_KEY -> {
                         inKey = true
                         if (currentRow != null) {
-                            currentKey = Key(context.resources, x, y, parser, currentRow)
+                            currentKey = Key(
+                                context.resources,
+                                context.theme,
+                                x,
+                                y,
+                                parser,
+                                currentRow
+                            )
                             keys.add(currentKey)
                             if (currentKey.codes.isNotEmpty() &&
                                 currentKey.codes[0] == KEYCODE_SHIFT
@@ -410,6 +417,7 @@ class Keyboard(context: Context, layoutRes: Int) {
      */
     inner class Key(
         res: Resources,
+        theme: Resources.Theme,
         x: Int,
         y: Int,
         parser: XmlResourceParser,
@@ -550,6 +558,7 @@ class Keyboard(context: Context, layoutRes: Int) {
             icon?.apply {
                 setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             }
+            icon?.applyTheme(theme) // Applying theme
             if (codes.isEmpty() && label.isNotEmpty()) {
                 codes = intArrayOf(label[0].code)
             }

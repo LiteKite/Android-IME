@@ -335,8 +335,6 @@ class KeyboardView @JvmOverloads constructor(
         val drawableState = key.getDrawableState()
         keyBackground?.state = drawableState
         key.icon?.state = drawableState
-        // Applying theme
-        key.icon?.applyTheme(context.theme)
         // Set keyBackground bound adjusting with key width, height
         // Both should have the same boundary area.
         val bounds = keyBackground?.bounds

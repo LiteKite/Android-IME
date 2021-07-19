@@ -18,10 +18,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:width="32dp"
     android:height="32dp"
+    android:tint="?colorButtonNormal"
+    android:tintMode="src_in"
     android:viewportHeight="24"
     android:viewportWidth="24"
     tools:ignore="UnusedResources">
     <path
-        android:fillColor="?colorButtonNormal"
+        android:fillColor="@color/white"
         android:pathData="M19,7v4H5.83l3.58,-3.59L8,6l-6,6 6,6 1.41,-1.41L5.83,13H21V7z" />
 </vector>

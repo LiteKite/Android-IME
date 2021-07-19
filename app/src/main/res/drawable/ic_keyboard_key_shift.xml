@@ -19,10 +19,11 @@
     android:width="32dp"
     android:height="32dp"
     android:tint="@color/color_keyboard_key_shift"
+    android:tintMode="src_in"
     android:viewportHeight="24"
     android:viewportWidth="24"
     tools:ignore="UnusedResources">
     <path
-        android:fillColor="?colorButtonNormal"
+        android:fillColor="@color/white"
         android:pathData="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
 </vector>

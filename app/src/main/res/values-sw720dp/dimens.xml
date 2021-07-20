@@ -16,19 +16,21 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
-    <dimen name="keyboard_key_size">72dp</dimen>
-    <dimen name="keyboard_half_key_size">36dp</dimen>
+    <dimen name="keyboard_key_size">66dp</dimen>
+    <dimen name="keyboard_half_key_size">33dp</dimen>
 
     <dimen name="keyboard_key_vertical_gap">3dp</dimen>
     <dimen name="keyboard_key_horizontal_gap">3dp</dimen>
 
-    <dimen name="keyboard_key_space_bar_width">372dp</dimen>
+    <dimen name="keyboard_key_space_bar_width">342dp</dimen>
 
-    <dimen name="keyboard_key_icon_mode_size">68dp</dimen>
+    <dimen name="keyboard_key_icon_size">34dp</dimen>
+    <dimen name="keyboard_key_icon_backspace_size">26dp</dimen>
+    <dimen name="keyboard_key_icon_mode_size">66dp</dimen>
 
     <dimen name="keyboard_view_root_padding_top">10dp</dimen>
     <dimen name="keyboard_view_padding">5dp</dimen>
-    <dimen name="keyboard_view_key_text_size">26dp</dimen>
-    <dimen name="keyboard_view_key_punctuation_height">32dp</dimen>
+    <dimen name="keyboard_view_key_text_size">28dp</dimen>
+    <dimen name="keyboard_view_key_punctuation_height">34dp</dimen>
 
 </resources>

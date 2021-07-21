@@ -23,6 +23,7 @@
     <color name="green_200">#abff4f</color>
     <color name="green_400">#0ead69</color>
     <color name="green_700">#08673f</color>
+    <color name="ic_launcher_background">#131313</color>
     <color name="keyboard_scrim_color">@color/black</color>
 
 </resources>

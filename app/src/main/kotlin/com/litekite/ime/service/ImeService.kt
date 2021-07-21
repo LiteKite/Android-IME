@@ -177,7 +177,7 @@ class ImeService : InputMethodService(), ConfigController.Callback {
                 }
                 Keyboard.KEYCODE_CYCLE_CHAR -> {
                     val text = currentInputConnection.getTextBeforeCursor(1, 0)
-                    if (text.isEmpty()) {
+                    if (text.isNullOrEmpty()) {
                         return
                     }
                     val currChar = text[0]

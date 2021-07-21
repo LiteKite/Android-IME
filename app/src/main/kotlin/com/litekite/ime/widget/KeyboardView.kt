@@ -77,7 +77,7 @@ class KeyboardView @JvmOverloads constructor(
     private var textStyle = Typeface.NORMAL
     private var keyTextSize = 18
     private var labelTextSize = 14
-    private val keyPunctuationSize: Int
+    private val keyPunctuationTextSize: Int
     private var keyTextColorPrimary = -0x1000000
     private val useKeyTextColorSecondary: Boolean
     private var keyTextColorSecondary = -0x67000000
@@ -172,8 +172,8 @@ class KeyboardView @JvmOverloads constructor(
             R.styleable.KeyboardView_labelTextSize,
             labelTextSize
         )
-        keyPunctuationSize = resources.getDimensionPixelSize(
-            R.dimen.keyboard_view_key_punctuation_height
+        keyPunctuationTextSize = resources.getDimensionPixelSize(
+            R.dimen.keyboard_view_key_punctuation_text_size
         )
         fontFamily = ta.getString(
             R.styleable.KeyboardView_fontFamily
@@ -366,7 +366,7 @@ class KeyboardView @JvmOverloads constructor(
             if (keyLabel.length > 1 && key.codes.size < 2) {
                 paint.textSize = labelTextSize.toFloat()
             } else if (keyLabel.isPunctuation()) {
-                paint.textSize = keyPunctuationSize.toFloat()
+                paint.textSize = keyPunctuationTextSize.toFloat()
             } else {
                 paint.textSize = keyTextSize.toFloat()
             }

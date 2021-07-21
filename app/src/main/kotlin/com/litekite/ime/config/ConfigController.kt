@@ -18,6 +18,7 @@ package com.litekite.ime.config
 import android.content.Context
 import android.content.res.Configuration
 import com.litekite.ime.base.CallbackProvider
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,10 +38,13 @@ class ConfigController @Inject constructor(context: Context) :
 
     private var lastConfig: Configuration = context.resources.configuration
     private var uiMode: Int
+    private var orientation: Int
+
     override val callbacks: ArrayList<Callback> = ArrayList()
 
     init {
         uiMode = lastConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        orientation = lastConfig.orientation
     }
 
     fun onConfigChanged(newConfig: Configuration) {
@@ -62,6 +66,11 @@ class ConfigController @Inject constructor(context: Context) :
             callbacks.forEach { it.onThemeChanged() }
             uiMode = newUiMode
         }
+        // Device orientation change
+        if (orientation != newConfig.orientation) {
+            callbacks.forEach { it.onDeviceOrientationChanged() }
+            orientation = newConfig.orientation
+        }
         // Overlay change
         if ((lastConfig.updateFrom(newConfig) and CONFIG_ASSETS_PATHS) != 0) {
             callbacks.forEach { it.onOverlayChanged() }
@@ -79,5 +88,7 @@ class ConfigController @Inject constructor(context: Context) :
         fun onThemeChanged() {}
 
         fun onOverlayChanged() {}
+
+        fun onDeviceOrientationChanged() {}
     }
 }

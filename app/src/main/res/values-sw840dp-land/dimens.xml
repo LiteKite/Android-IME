@@ -16,21 +16,21 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
-    <dimen name="keyboard_key_size">76dp</dimen>
-    <dimen name="keyboard_half_key_size">38dp</dimen>
+    <dimen name="keyboard_key_size">106dp</dimen>
+    <dimen name="keyboard_half_key_size">53dp</dimen>
 
-    <dimen name="keyboard_key_vertical_gap">3dp</dimen>
-    <dimen name="keyboard_key_horizontal_gap">3dp</dimen>
+    <dimen name="keyboard_key_vertical_gap">5dp</dimen>
+    <dimen name="keyboard_key_horizontal_gap">5dp</dimen>
 
-    <dimen name="keyboard_key_space_bar_width">392dp</dimen>
+    <dimen name="keyboard_key_space_bar_width">550dp</dimen>
 
-    <dimen name="keyboard_key_icon_size">36dp</dimen>
-    <dimen name="keyboard_key_icon_backspace_size">28dp</dimen>
-    <dimen name="keyboard_key_icon_mode_size">70dp</dimen>
+    <dimen name="keyboard_key_icon_size">56dp</dimen>
+    <dimen name="keyboard_key_icon_backspace_size">42dp</dimen>
+    <dimen name="keyboard_key_icon_mode_size">98dp</dimen>
 
     <dimen name="keyboard_view_root_padding_top">10dp</dimen>
     <dimen name="keyboard_view_padding">5dp</dimen>
-    <dimen name="keyboard_view_key_text_size">30sp</dimen>
-    <dimen name="keyboard_view_key_punctuation_text_size">36sp</dimen>
+    <dimen name="keyboard_view_key_text_size">40sp</dimen>
+    <dimen name="keyboard_view_key_punctuation_text_size">44sp</dimen>
 
 </resources>

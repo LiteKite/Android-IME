@@ -88,6 +88,13 @@ class ImeService : InputMethodService(), ConfigController.Callback {
         binding.vKeyboard.setKeyboard(qwertyKeyboard)
     }
 
+    override fun onDeviceOrientationChanged() {
+        super.onDeviceOrientationChanged()
+        // Recreate all the keyboard layouts to reflect device orientation change
+        parseKeyboardLayoutFromXml()
+        binding.vKeyboard.setKeyboard(qwertyKeyboard)
+    }
+
     private fun parseKeyboardLayoutFromXml() {
         qwertyKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_QWERTY)
         symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)

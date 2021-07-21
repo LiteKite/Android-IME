@@ -30,7 +30,7 @@
 
     <dimen name="keyboard_view_root_padding_top">10dp</dimen>
     <dimen name="keyboard_view_padding">5dp</dimen>
-    <dimen name="keyboard_view_key_text_size">28dp</dimen>
-    <dimen name="keyboard_view_key_punctuation_height">34dp</dimen>
+    <dimen name="keyboard_view_key_text_size">28sp</dimen>
+    <dimen name="keyboard_view_key_punctuation_text_size">34sp</dimen>
 
 </resources>

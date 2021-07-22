@@ -40,7 +40,13 @@
 
 6) Themed NavBar Keyboard - https://android.googlesource.com/platform/development/+/refs/heads/master/samples/ThemedNavBarKeyboard/
 
-7) Parsing XML Data using XmlPullParser - https://developer.android.com/training/basics/network-ops/xml 
+7) Parsing XML Data using XmlPullParser - https://developer.android.com/training/basics/network-ops/xml
+
+## Support
+
+If you've found an error in this sample, please file an issue: https://github.com/LiteKite/Android-IME/issues
+
+Patches are encouraged, and may be submitted by forking this project and submitting a pull request through GitHub.
 
 ## License
 

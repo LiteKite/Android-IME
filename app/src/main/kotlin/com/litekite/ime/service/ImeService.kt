@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo
 import com.google.android.material.color.MaterialColors
 import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
+import com.litekite.ime.audio.AudioController
 import com.litekite.ime.config.ConfigController
 import com.litekite.ime.databinding.LayoutKeyboardViewBinding
 import com.litekite.ime.util.CharUtil.cycleCharacter
@@ -50,6 +51,9 @@ class ImeService : InputMethodService(), ConfigController.Callback {
 
     @Inject
     lateinit var configController: ConfigController
+
+    @Inject
+    lateinit var audioController: AudioController
 
     private var _editorInfo: EditorInfo? = null
     private val editorInfo: EditorInfo get() = _editorInfo!!
@@ -218,6 +222,7 @@ class ImeService : InputMethodService(), ConfigController.Callback {
                     commitText(primaryCode)
                 }
             }
+            audioController.playSoundEffect()
         }
 
         override fun onStopInput() {

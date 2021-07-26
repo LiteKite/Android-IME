@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.litekite.ime.di
+package com.litekite.ime.audio
 
 import android.content.Context
-import com.litekite.ime.audio.AudioController
-import com.litekite.ime.config.ConfigController
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import android.media.AudioManager
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
+ * An android audio service controller
+ *
  * @author Vignesh S
- * @version 1.0, 19/07/2021
+ * @version 1.0, 26/07/2021
  * @since 1.0
  */
-@Module
-@InstallIn(SingletonComponent::class)
-object AppComponents {
+@Singleton
+class AudioController @Inject constructor(context: Context) {
 
-    @Provides
-    @Singleton
-    fun provideConfigController(@ApplicationContext context: Context): ConfigController =
-        ConfigController(context)
+    private var audioController: AudioManager =
+        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-    @Provides
-    @Singleton
-    fun provideAudioController(@ApplicationContext context: Context): AudioController =
-        AudioController(context)
+    fun playSoundEffect() {
+        audioController.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD)
+    }
 }

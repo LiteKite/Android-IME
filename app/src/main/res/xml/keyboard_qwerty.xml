@@ -21,7 +21,7 @@
     app:keyWidth="@dimen/keyboard_key_size"
     tools:ignore="UnusedResources">
 
-    <Row app:rowEdgeFlags="top">
+    <Row>
         <Key
             app:keyEdgeFlags="left"
             app:keyLabel="q" />
@@ -156,7 +156,7 @@
             app:keyIcon="@drawable/ic_keyboard_key_shift" />
     </Row>
 
-    <Row app:rowEdgeFlags="bottom">
+    <Row>
         <Key
             app:codes="@integer/keycode_close_keyboard"
             app:keyEdgeFlags="left"

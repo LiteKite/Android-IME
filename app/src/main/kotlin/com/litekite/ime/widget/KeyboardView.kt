@@ -569,10 +569,10 @@ class KeyboardView @JvmOverloads constructor(
                     val isInside = currentKey.isInside(touchX, touchY)
                     currentKey.onReleased(isInside)
                     invalidateKey(currentKeyIndex)
-                }
-                // If we're not on a repeating key (which sends on a DOWN event)
-                if (!currentKey.isRepeatable) {
-                    sendKeyEvent()
+                    // If we're not on a repeating key (which sends on a DOWN event)
+                    if (!currentKey.isRepeatable) {
+                        sendKeyEvent()
+                    }
                 }
             }
         }

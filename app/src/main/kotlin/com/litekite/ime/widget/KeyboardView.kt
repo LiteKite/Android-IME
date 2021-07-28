@@ -75,10 +75,10 @@ class KeyboardView @JvmOverloads constructor(
     private val keyBgPadding = Rect(0, 0, 0, 0)
     private val fontFamily: String?
     private var textStyle = Typeface.NORMAL
-    private var keyTextSize = 18
     private var labelTextSize = 14
     private val keyPunctuationTextSize: Int
     private var keyTextColorPrimary = -0x1000000
+    private val useKeyPreview: Boolean
     private val useKeyTextColorSecondary: Boolean
     private var keyTextColorSecondary = -0x67000000
 
@@ -101,7 +101,7 @@ class KeyboardView @JvmOverloads constructor(
 
     private val paint = Paint().apply {
         isAntiAlias = true
-        textSize = keyTextSize.toFloat()
+        textSize = labelTextSize.toFloat()
         textAlign = Paint.Align.CENTER
         alpha = MAX_ALPHA
         color = Color.TRANSPARENT
@@ -134,6 +134,9 @@ class KeyboardView @JvmOverloads constructor(
     /** The accessibility manager for accessibility support  */
     private var accessibilityManager: AccessibilityManager? = null
 
+    /** Keyboard key preview popup window  */
+    private var keyPreviewPopupWindow: KeyPreviewPopupWindow? = null
+
     init {
         val ta = context.obtainStyledAttributes(
             attrs,
@@ -156,6 +159,10 @@ class KeyboardView @JvmOverloads constructor(
             R.styleable.KeyboardView_keyTextColorPrimary,
             keyTextColorPrimary
         )
+        useKeyPreview = ta.getBoolean(
+            R.styleable.KeyboardView_useKeyPreview,
+            false
+        )
         useKeyTextColorSecondary = ta.getBoolean(
             R.styleable.KeyboardView_useKeyTextColorSecondary,
             false
@@ -163,10 +170,6 @@ class KeyboardView @JvmOverloads constructor(
         keyTextColorSecondary = ta.getColor(
             R.styleable.KeyboardView_keyTextColorSecondary,
             keyTextColorSecondary
-        )
-        keyTextSize = ta.getDimensionPixelSize(
-            R.styleable.KeyboardView_keyTextSize,
-            keyTextSize
         )
         labelTextSize = ta.getDimensionPixelSize(
             R.styleable.KeyboardView_labelTextSize,
@@ -200,6 +203,9 @@ class KeyboardView @JvmOverloads constructor(
             )
             setKeyboard(keyboard)
         }
+        if (useKeyPreview) {
+            keyPreviewPopupWindow = KeyPreviewPopupWindow(context)
+        }
         accessibilityManager =
             context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
     }
@@ -215,6 +221,7 @@ class KeyboardView @JvmOverloads constructor(
         this.keyboard = keyboard
         abortKey = true // Perform touch only until the next ACTION_DOWN
         keyboardChanged = true
+        keyPreviewPopupWindow?.hidePreview()
         currentKeyIndex = Keyboard.NOT_A_KEY
         invalidateAllKeys()
     }
@@ -362,13 +369,11 @@ class KeyboardView @JvmOverloads constructor(
                     keyTextColorPrimary
                 }
             }
-            // For characters, use large font. For labels like "Done", use small font.
-            if (keyLabel.length > 1 && key.codes.size < 2) {
-                paint.textSize = labelTextSize.toFloat()
-            } else if (keyLabel.isPunctuation()) {
+            // For punctuation, use large font. For labels, use small font.
+            if (keyLabel.isPunctuation()) {
                 paint.textSize = keyPunctuationTextSize.toFloat()
             } else {
-                paint.textSize = keyTextSize.toFloat()
+                paint.textSize = labelTextSize.toFloat()
             }
             // Draw the text
             canvas.drawText(
@@ -538,6 +543,7 @@ class KeyboardView @JvmOverloads constructor(
                 }
                 val currentKey = keys[currentKeyIndex]
                 currentKey.onPressed()
+                keyPreviewPopupWindow?.showPreview(this, currentKey)
                 invalidateKey(currentKeyIndex)
                 postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 if (currentKey.isRepeatable) {
@@ -553,6 +559,7 @@ class KeyboardView @JvmOverloads constructor(
                 val currentKey = keys[currentKeyIndex]
                 if (currentKey.isPressed && !currentKey.isInside(touchX, touchY)) {
                     currentKey.onReleased(false)
+                    keyPreviewPopupWindow?.hidePreview()
                     invalidateKey(currentKeyIndex)
                 }
                 postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
@@ -568,6 +575,7 @@ class KeyboardView @JvmOverloads constructor(
                 if (currentKey.isPressed) {
                     val isInside = currentKey.isInside(touchX, touchY)
                     currentKey.onReleased(isInside)
+                    keyPreviewPopupWindow?.hidePreview()
                     invalidateKey(currentKeyIndex)
                     // If we're not on a repeating key (which sends on a DOWN event)
                     if (!currentKey.isRepeatable) {
@@ -599,6 +607,7 @@ class KeyboardView @JvmOverloads constructor(
     }
 
     private fun close() {
+        keyPreviewPopupWindow?.hidePreview()
         removeCallbacks()
         buffer = null
         canvas = null

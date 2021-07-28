@@ -20,11 +20,20 @@
     <style name="KeyboardStyle">
         <item name="fontFamily">sans-serif</item>
         <item name="textStyle">normal</item>
-        <item name="keyTextSize">@dimen/keyboard_view_key_text_size</item>
+        <item name="useKeyPreview">true</item>
         <item name="labelTextSize">@dimen/keyboard_view_key_text_size</item>
         <item name="keyTextColorPrimary">?android:textColorPrimary</item>
         <item name="keyTextColorSecondary">?android:textColorSecondary</item>
         <item name="keyBackground">@drawable/bg_keyboard_key</item>
+    </style>
+
+    <style name="KeyPreviewPopupTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColorSecondary">?android:textColorSecondary</item>
+        <item name="android:textSize">@dimen/keyboard_view_key_text_size</item>
+        <item name="android:background">@null</item>
     </style>
 
 </resources>

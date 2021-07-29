@@ -1,7 +1,7 @@
 [versions]
 
 # Plugins
-android-gradle-plugin = "4.2.2"
+android-gradle-plugin = "7.0.0"
 spotless-plugin-gradle = "5.12.5"
 
 # Kotlin

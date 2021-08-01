@@ -119,7 +119,13 @@ class KeyboardView @JvmOverloads constructor(
     private val performLongPress = Runnable {
         if (isPressed && isLongClickable) {
             performLongClick()
+            val keyboard = this.keyboard ?: return@Runnable
+            keyPopupCharsWindow.showPopupChars(this, keyboard.keys[currentKeyIndex])
         }
+    }
+
+    private val keyPopupCharCallback = KeyPopupCharsWindow.KeyPopupCharListener { primaryCode ->
+        callbacks.forEach { it.onKey(primaryCode) }
     }
 
     private val performRepeatKey = object : Runnable {
@@ -136,6 +142,9 @@ class KeyboardView @JvmOverloads constructor(
 
     /** Keyboard key preview popup window  */
     private var keyPreviewPopupWindow: KeyPreviewPopupWindow? = null
+
+    /** Keyboard key popup characters window  */
+    private var keyPopupCharsWindow: KeyPopupCharsWindow = KeyPopupCharsWindow(context)
 
     init {
         val ta = context.obtainStyledAttributes(
@@ -206,6 +215,7 @@ class KeyboardView @JvmOverloads constructor(
         if (useKeyPreview) {
             keyPreviewPopupWindow = KeyPreviewPopupWindow(context)
         }
+        keyPopupCharsWindow.addCallback(keyPopupCharCallback)
         accessibilityManager =
             context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
     }
@@ -222,6 +232,7 @@ class KeyboardView @JvmOverloads constructor(
         abortKey = true // Perform touch only until the next ACTION_DOWN
         keyboardChanged = true
         keyPreviewPopupWindow?.hidePreview()
+        keyPopupCharsWindow.hidePopupChars()
         currentKeyIndex = Keyboard.NOT_A_KEY
         invalidateAllKeys()
     }
@@ -355,7 +366,7 @@ class KeyboardView @JvmOverloads constructor(
         // Draw the keyBackground
         keyBackground?.draw(canvas)
         // Switch the character to uppercase if shift is pressed
-        val keyLabel = key.adjustCase(getLocale()).toString()
+        val keyLabel = key.adjustLabelCase(getLocale())
         if (keyLabel.isNotEmpty()) {
             // Use primary color for letters and digits, secondary color for everything else
             paint.color = when {
@@ -537,11 +548,13 @@ class KeyboardView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 abortKey = false
+                keyPopupCharsWindow.hidePopupChars()
                 currentKeyIndex = keyboard.getKeyIndex(touchX, touchY)
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
                 val currentKey = keys[currentKeyIndex]
+                isPressed = true
                 currentKey.onPressed()
                 keyPreviewPopupWindow?.showPreview(this, currentKey)
                 invalidateKey(currentKeyIndex)
@@ -557,12 +570,19 @@ class KeyboardView @JvmOverloads constructor(
                     return true
                 }
                 val currentKey = keys[currentKeyIndex]
-                if (currentKey.isPressed && !currentKey.isInside(touchX, touchY)) {
-                    currentKey.onReleased(false)
-                    keyPreviewPopupWindow?.hidePreview()
-                    invalidateKey(currentKeyIndex)
+                if (currentKey.isPressed) {
+                    if (currentKey.isInside(touchX, touchY)) {
+                        postDelayed(
+                            performLongPress,
+                            ViewConfiguration.getLongPressTimeout().toLong()
+                        )
+                    } else {
+                        isPressed = false
+                        currentKey.onReleased(false)
+                        keyPreviewPopupWindow?.hidePreview()
+                        invalidateKey(currentKeyIndex)
+                    }
                 }
-                postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
             }
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL -> {
@@ -574,6 +594,7 @@ class KeyboardView @JvmOverloads constructor(
                 val currentKey = keys[currentKeyIndex]
                 if (currentKey.isPressed) {
                     val isInside = currentKey.isInside(touchX, touchY)
+                    isPressed = false
                     currentKey.onReleased(isInside)
                     keyPreviewPopupWindow?.hidePreview()
                     invalidateKey(currentKeyIndex)

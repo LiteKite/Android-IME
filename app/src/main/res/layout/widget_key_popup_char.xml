@@ -14,23 +14,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_key_popup_char"
+    style="@style/KeyPopupTextViewStyle"
     android:layout_width="@dimen/keyboard_key_size"
     android:layout_height="@dimen/keyboard_key_size"
-    android:background="@drawable/bg_keyboard_key">
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_key_preview"
-        style="@style/KeyPreviewPopupTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="top"
-        android:textAlignment="gravity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="a" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:background="@drawable/bg_keyboard_key"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:textAlignment="gravity"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="a" />

@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import com.google.android.material.color.MaterialColors
 import com.litekite.ime.R
-import com.litekite.ime.databinding.WidgetPopupKeyPreviewBinding
+import com.litekite.ime.databinding.WidgetKeyPopupPreviewBinding
 import com.litekite.ime.util.StringUtil.isPunctuation
 import java.util.Locale
 
@@ -47,7 +47,7 @@ class KeyPreviewPopupWindow @JvmOverloads constructor(
         private const val PREVIEW_POPUP_DISMISS_DELAY = 70L
     }
 
-    private val binding = WidgetPopupKeyPreviewBinding.inflate(LayoutInflater.from(context))
+    private val binding = WidgetKeyPopupPreviewBinding.inflate(LayoutInflater.from(context))
 
     init {
         contentView = binding.root
@@ -63,7 +63,7 @@ class KeyPreviewPopupWindow @JvmOverloads constructor(
     private fun getLocale(): Locale = context.resources.configuration.locales[0]
 
     fun showPreview(parent: View, key: Keyboard.Key) {
-        val keyLabel = key.adjustCase(getLocale()).toString()
+        val keyLabel = key.adjustLabelCase(getLocale())
         if (keyLabel.isEmpty() || keyLabel.length > 3) {
             // Key icon or special key code preview is disabled
             return

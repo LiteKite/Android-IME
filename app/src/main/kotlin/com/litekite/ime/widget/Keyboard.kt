@@ -439,20 +439,17 @@ class Keyboard(context: Context, layoutRes: Int) {
         /** Key horizontal gap before this key. */
         internal val horizontalGap: Int
 
+        /** Key vertical gap above this key. */
+        internal val verticalGap: Int
+
         /**
          * All the key codes (unicode or custom code) that this key could generate,
          * zeroth being the most important.
          */
         internal var codes = intArrayOf()
 
-        /**
-         * If this key pops up a mini Keyboard,
-         * this is the resource id for the XML layout for that Keyboard.
-         */
-        private val popupKeyboardResId: Int
-
         /** Popup characters  */
-        private var popupKeyboardChars: CharSequence = ""
+        internal var popupKeyboardChars: CharSequence = ""
 
         /**
          * Flags that specify the anchoring to edges of the Keyboard for detecting touch events
@@ -511,6 +508,11 @@ class Keyboard(context: Context, layoutRes: Int) {
                 displayWidth,
                 defaultKeyHorizontalGap
             )
+            verticalGap = ta.getDimensionOrFraction(
+                R.styleable.Keyboard_keyVerticalGap,
+                displayHeight,
+                defaultKeyVerticalGap
+            )
             this.x = x + horizontalGap
             this.y = y
             ta.recycle()
@@ -530,10 +532,6 @@ class Keyboard(context: Context, layoutRes: Int) {
             } else if (keyCodesTypedVal.type == TypedValue.TYPE_STRING) {
                 codes = keyCodesTypedVal.string.toString().parseCSV()
             }
-            popupKeyboardResId = ta.getResourceId(
-                R.styleable.Keyboard_Key_popupKeyboard,
-                0
-            )
             popupKeyboardChars = ta.getText(R.styleable.Keyboard_Key_popupCharacters) ?: ""
             edgeFlags = ta.getInt(
                 R.styleable.Keyboard_Key_keyEdgeFlags,
@@ -588,7 +586,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 )
         }
 
-        fun adjustCase(locale: Locale): CharSequence {
+        fun adjustLabelCase(locale: Locale): String {
             var label = this.label
             if (isShifted &&
                 label.isNotEmpty() &&
@@ -597,7 +595,15 @@ class Keyboard(context: Context, layoutRes: Int) {
             ) {
                 label = label.toString().uppercase(locale)
             }
-            return label
+            return label.toString()
+        }
+
+        fun adjustPopupCharCase(popupChar: Char, locale: Locale): String {
+            var popupCharStr = popupChar.toString()
+            if (isShifted && label.isNotEmpty() && Character.isLowerCase(popupChar)) {
+                popupCharStr = popupCharStr.uppercase(locale)
+            }
+            return popupCharStr
         }
 
         /**

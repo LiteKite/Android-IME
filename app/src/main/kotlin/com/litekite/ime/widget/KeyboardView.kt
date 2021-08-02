@@ -29,7 +29,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.accessibility.AccessibilityManager
-import androidx.core.content.ContextCompat
 import com.litekite.ime.R
 import com.litekite.ime.app.ImeApp
 import com.litekite.ime.base.CallbackProvider
@@ -62,15 +61,12 @@ class KeyboardView @JvmOverloads constructor(
     companion object {
         private val TAG: String = KeyboardView::class.java.simpleName
 
-        private const val SCRIM_ALPHA = 242 // 95% opacity.
         private const val MAX_ALPHA = 255
 
         private const val REPEAT_KEY_DELAY = 50L // ~20 keys per second
         private const val REPEAT_KEY_START_DELAY = 400L
     }
 
-    private var scrimColor: Int
-    private var scrimAlpha = 0
     private val keyBackground: Drawable?
     private val keyBgPadding = Rect(0, 0, 0, 0)
     private val fontFamily: String?
@@ -152,13 +148,6 @@ class KeyboardView @JvmOverloads constructor(
             R.styleable.KeyboardView,
             defStyleAttr,
             0
-        )
-        val color = ContextCompat.getColor(context, R.color.keyboard_scrim_color)
-        scrimColor = Color.argb(
-            SCRIM_ALPHA,
-            Color.red(color),
-            Color.green(color),
-            Color.blue(color)
         )
         keyBackground = ta.getDrawable(
             R.styleable.KeyboardView_keyBackground
@@ -338,10 +327,6 @@ class KeyboardView @JvmOverloads constructor(
                 onKeyDraw(key)
             }
         }
-        // Overlay a dark rectangle to dim the keyboard
-        paint.color = scrimColor
-        paint.alpha = scrimAlpha
-        canvas.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
         // Reset states
         drawPending = false
         dirtyRect.setEmpty()

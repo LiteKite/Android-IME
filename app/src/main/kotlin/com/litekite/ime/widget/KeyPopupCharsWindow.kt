@@ -32,7 +32,6 @@ import com.google.android.material.color.MaterialColors
 import com.litekite.ime.R
 import com.litekite.ime.base.CallbackProvider
 import com.litekite.ime.databinding.WidgetKeyPopupCharBinding
-import com.litekite.ime.util.StringUtil.isPunctuation
 import java.util.Locale
 
 /**
@@ -86,16 +85,9 @@ class KeyPopupCharsWindow @JvmOverloads constructor(
             // Adjusting case based on the main keyboard key
             val keyLabel = key.adjustPopupCharCase(popupChars[charIndex], getLocale())
             keyBinding.tvKeyPopupChar.text = keyLabel
-            // For punctuation, use large font. For labels, use small font.
-            if (keyLabel.isPunctuation()) {
-                keyBinding.tvKeyPopupChar.textSize = context.resources.getDimensionPixelSize(
-                    R.dimen.keyboard_view_key_punctuation_text_size
-                ).toFloat()
-            } else {
-                keyBinding.tvKeyPopupChar.textSize = context.resources.getDimensionPixelSize(
-                    R.dimen.keyboard_view_key_text_size
-                ).toFloat()
-            }
+            keyBinding.tvKeyPopupChar.textSize = context.resources.getDimensionPixelSize(
+                R.dimen.keyboard_view_key_text_size
+            ).toFloat()
             // Adding popup character
             (contentView as ViewGroup).addView(keyBinding.root)
             // Width & height of the popup window

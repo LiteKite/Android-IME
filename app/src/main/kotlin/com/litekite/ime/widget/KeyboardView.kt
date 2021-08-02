@@ -583,8 +583,9 @@ class KeyboardView @JvmOverloads constructor(
                     currentKey.onReleased(isInside)
                     keyPreviewPopupWindow?.hidePreview()
                     invalidateKey(currentKeyIndex)
-                    // If we're not on a repeating key (which sends on a DOWN event)
-                    if (!currentKey.isRepeatable) {
+                    // If we're not on a repeating key (which sends on a DOWN event) and
+                    // there was no pop-up chars window showing...
+                    if (!currentKey.isRepeatable && !keyPopupCharsWindow.isShowing) {
                         sendKeyEvent()
                     }
                 }

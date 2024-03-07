@@ -550,7 +550,6 @@ class KeyboardView @JvmOverloads constructor(
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                removeCallbacks()
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) {
                     return true
                 }
@@ -562,6 +561,7 @@ class KeyboardView @JvmOverloads constructor(
                             ViewConfiguration.getLongPressTimeout().toLong()
                         )
                     } else {
+                        removeCallbacks()
                         isPressed = false
                         currentKey.onReleased(false)
                         keyPreviewPopupWindow?.hidePreview()
